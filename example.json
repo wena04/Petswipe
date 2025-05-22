@@ -1,0 +1,103 @@
+{
+    "p1a2b3c4": {
+        "petName": "Bella",
+        "petAge": 3,
+        "petPicture": "https://example.com/pics/bella.jpg",
+        "petLocation": {
+            "altitude": 47.6205,
+            "longitude": -122.3493
+        },
+        "petBreed": "Labrador Retriever"
+    },
+    "d4e5f6g7": {
+        "petName": "Max",
+        "petAge": 5,
+        "petPicture": "https://example.com/pics/max.jpg",
+        "petLocation": {
+            "altitude": 34.0522,
+            "longitude": -118.2437
+        },
+        "petBreed": "German Shepherd"
+    },
+    "h8i9j0k1": {
+        "petName": "Luna",
+        "petAge": 2,
+        "petPicture": "https://example.com/pics/luna.jpg",
+        "petLocation": {
+            "altitude": 40.7128,
+            "longitude": -74.0060
+        },
+        "petBreed": "Golden Retriever"
+    },
+    "l2m3n4o5": {
+        "petName": "Charlie",
+        "petAge": 4,
+        "petPicture": "https://example.com/pics/charlie.jpg",
+        "petLocation": {
+            "altitude": 37.7749,
+            "longitude": -122.4194
+        },
+        "petBreed": "Beagle"
+    },
+    "p6q7r8s9": {
+        "petName": "Lucy",
+        "petAge": 1,
+        "petPicture": "https://example.com/pics/lucy.jpg",
+        "petLocation": {
+            "altitude": 51.5074,
+            "longitude": -0.1278
+        },
+        "petBreed": "French Bulldog"
+    },
+    "t0u1v2w3": {
+        "petName": "Rocky",
+        "petAge": 6,
+        "petPicture": "https://example.com/pics/rocky.jpg",
+        "petLocation": {
+            "altitude": 48.8566,
+            "longitude": 2.3522
+        },
+        "petBreed": "Bulldog"
+    },
+    "x4y5z6a7": {
+        "petName": "Daisy",
+        "petAge": 2,
+        "petPicture": "https://example.com/pics/daisy.jpg",
+        "petLocation": {
+            "altitude": 41.8781,
+            "longitude": -87.6298
+        },
+        "petBreed": "Poodle"
+    },
+    "b8c9d0e1": {
+        "petName": "Cooper",
+        "petAge": 3,
+        "petPicture": "https://example.com/pics/cooper.jpg",
+        "petLocation": {
+            "altitude": 45.5152,
+            "longitude": -122.6784
+        },
+        "petBreed": "Rottweiler"
+    },
+    "f2g3h4i5": {
+        "petName": "Molly",
+        "petAge": 4,
+        "petPicture": "https://example.com/pics/molly.jpg",
+        "petLocation": {
+            "altitude": 35.6895,
+            "longitude": 139.6917
+        },
+        "petBreed": "Boxer"
+    },
+    "j6k7l8m9": {
+        "petName": "Buddy",
+        "petAge": 7,
+        "petPicture": "https://example.com/pics/buddy.jpg",
+        "petLocation": {
+            "altitude": 55.7558,
+            "longitude": 37.6176
+        },
+        "petBreed": "Siberian Husky"
+    }
+}
+
