@@ -9,6 +9,15 @@ import UIKit
 
 class MatchesPage: UIViewController {
 
+    @IBOutlet weak var petTableView: UITableView!
+    
+    @IBOutlet weak var petTabelViewCell: UITableViewCell!
+    
+    @IBOutlet weak var petTableViewImage: UIImageView!
+    
+    @IBOutlet weak var petTableViewName: UILabel!
+    
+    @IBOutlet weak var tableImage: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
 
