@@ -70,3 +70,5 @@ fastlane/test_output
 # All Firebase admin keys
 *firebase-adminsdk-*.json
 
+**/GoogleService-Info.plist
+
