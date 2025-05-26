@@ -43,7 +43,7 @@
                                 <rect key="frame" x="0.0" y="162" width="393" height="573"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="163" id="2Cu-AJ-NAe">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="MatchesTableViewCell" rowHeight="163" id="2Cu-AJ-NAe" customClass="MatchesTableViewCell" customModule="PetSwipe" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="393" height="163"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="2Cu-AJ-NAe" id="xSh-rc-Bcz">
@@ -74,6 +74,8 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="matchImage" destination="Ehs-6O-Ag4" id="3o0-k7-eJa"/>
+                                            <outlet property="matchLabel" destination="hwQ-Ux-uF1" id="FeW-S1-7Ja"/>
                                             <segue destination="A7x-OP-Dc3" kind="show" trigger="accessoryAction" id="Kb2-DO-666"/>
                                         </connections>
                                     </tableViewCell>
@@ -90,15 +92,18 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="daP-oA-J9b"/>
+                    <connections>
+                        <outlet property="MatchesTableView" destination="wyo-q7-sLO" id="UQD-Ha-PQQ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Bg-o5-Bom" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2836" y="844"/>
         </scene>
-        <!--View Controller-->
+        <!--Info Page-->
         <scene sceneID="zCV-E3-Idg">
             <objects>
-                <viewController id="A7x-OP-Dc3" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="InfoPage" id="A7x-OP-Dc3" customClass="InfoPage" customModule="PetSwipe" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="BQ7-T5-aYz">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -107,21 +112,14 @@
                                 <rect key="frame" x="103" y="192" width="187" height="136"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u8u-8i-eMQ">
-                                <rect key="frame" x="175" y="388" width="42" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ozU-fx-k9t">
                                 <rect key="frame" x="120" y="700" width="152" height="35"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Find My Pe!"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Find My Pet!"/>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ipO-Zk-twn">
-                                <rect key="frame" x="175" y="508" width="42" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u8u-8i-eMQ">
+                                <rect key="frame" x="80" y="424" width="233" height="169"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -132,6 +130,10 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="XM1-cc-h87"/>
+                    <connections>
+                        <outlet property="infoPageImage" destination="lRZ-8x-IZ0" id="4i3-RR-9IO"/>
+                        <outlet property="infoPageLabel" destination="u8u-8i-eMQ" id="BZl-ZV-T8c"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gPh-hi-1fd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -143,6 +145,7 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="N90-5f-vul" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="NXl-DA-MLj">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
@@ -176,7 +179,6 @@
         <!--Your Matches-->
         <scene sceneID="gIF-5g-Esm">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="vIn-I6-ifD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="pHO-6x-Uvb" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Your Matches" image="checkmark.seal.fill" catalog="system" id="jGS-Rf-5xC"/>
                     <toolbarItems/>
@@ -189,6 +191,7 @@
                         <segue destination="huR-6n-XMP" kind="relationship" relationship="rootViewController" id="Tad-b3-EHa"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vIn-I6-ifD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2017.5572519083969" y="831.69014084507046"/>
         </scene>
