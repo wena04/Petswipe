@@ -6,21 +6,26 @@
 //
 
 import UIKit
-import Firebase
-import FirebaseCore
+//import Firebase
+//import FirebaseCore
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
 
         // Init Firebase
-        FirebaseApp.configure()
-        testFetchPetsFromFirestore()
+        // FirebaseApp.configure()
+        // testFetchPetsFromFirestore()
+        
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.makeKeyAndVisible()
+        window?.rootViewController = ViewController()
+        
         return true
     }
 
@@ -38,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
         
         // Check firebase config
-        print("Firebase configured: \(FirebaseApp.app() != nil)")
+//        print("Firebase configured: \(FirebaseApp.app() != nil)")
     }
 
 }
