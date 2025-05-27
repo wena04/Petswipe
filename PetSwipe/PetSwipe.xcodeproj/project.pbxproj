@@ -42,13 +42,6 @@
 			);
 			target = B8008AE22DDC0D9000A6419A /* PetSwipe */;
 		};
-		1565D6FA2DE099CA0048B443 /* Exceptions for "PetSwipe" folder in "PetSwipeTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"GoogleService-Info.plist",
-			);
-			target = B8008AF82DDC0D9100A6419A /* PetSwipeTests */;
-		};
 		B8008B0B2DDC0D9100A6419A /* Exceptions for "PetSwipe" folder in "PetSwipe" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -63,7 +56,6 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				B8008B0B2DDC0D9100A6419A /* Exceptions for "PetSwipe" folder in "PetSwipe" target */,
-				1565D6FA2DE099CA0048B443 /* Exceptions for "PetSwipe" folder in "PetSwipeTests" target */,
 			);
 			path = PetSwipe;
 			sourceTree = "<group>";

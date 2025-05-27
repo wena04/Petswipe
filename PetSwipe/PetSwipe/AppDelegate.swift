@@ -22,9 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // FirebaseApp.configure()
         // testFetchPetsFromFirestore()
         
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.makeKeyAndVisible()
-        window?.rootViewController = ViewController()
+//        window = UIWindow(frame: UIScreen.main.bounds)
+//        window?.makeKeyAndVisible()
+//        window?.rootViewController = ViewController()
         
         return true
     }
