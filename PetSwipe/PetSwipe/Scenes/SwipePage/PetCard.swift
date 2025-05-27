@@ -80,4 +80,10 @@ class PetCard: SwipeBaseView {
             workLabel.trailingAnchor.constraint(equalTo: friendsIconView.leadingAnchor, constant: -20)
             ])
     }
+    
+    func configure(with pet: tempPet) {
+        nameLabel.text = pet.name
+        workLabel.text = "\(pet.species), Age: \(pet.age)"
+        profileImageView.image = pet.image
+    }
 }

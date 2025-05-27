@@ -9,6 +9,9 @@ import UIKit
 
 class ButtonsView: SwipeBaseView {
     
+    var onLike: (() -> Void)?
+    var onPass: (() -> Void)?
+    
     lazy var likeButton: UIButton = {
         let b = ButtonStorage.buttonWithImage(
             image: UIImage(systemName: "heart.fill")!,
@@ -58,13 +61,14 @@ class ButtonsView: SwipeBaseView {
             ])
         }
     }
-        
+
     @objc func like() {
         print("like print")
+        onLike?()
     }
-    
+
     @objc func pass() {
         print("pass print")
+        onPass?()
     }
-    
 }
