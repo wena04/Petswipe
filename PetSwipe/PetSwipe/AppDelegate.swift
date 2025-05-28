@@ -6,8 +6,8 @@
 //
 
 import UIKit
-//import Firebase
-//import FirebaseCore
+import Firebase
+import FirebaseCore
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,8 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
 
         // Init Firebase
-        // FirebaseApp.configure()
-        // testFetchPetsFromFirestore()
+         FirebaseApp.configure()
+         testFetchPetsFromFirestore()
         
 //        window = UIWindow(frame: UIScreen.main.bounds)
 //        window?.makeKeyAndVisible()

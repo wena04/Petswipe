@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		16EAEE752DE5CCF800D47BBA /* pet_test.json in Resources */ = {isa = PBXBuildFile; fileRef = 16EAEE742DE5CCF800D47BBA /* pet_test.json */; };
+		16EB70A72DE6ADD100C789B1 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 16EB70A62DE6ADD100C789B1 /* FirebaseCore */; };
+		16EB70A92DE6ADD100C789B1 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 16EB70A82DE6ADD100C789B1 /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +82,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16EB70A72DE6ADD100C789B1 /* FirebaseCore in Frameworks */,
+				16EB70A92DE6ADD100C789B1 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,6 +145,8 @@
 			);
 			name = PetSwipe;
 			packageProductDependencies = (
+				16EB70A62DE6ADD100C789B1 /* FirebaseCore */,
+				16EB70A82DE6ADD100C789B1 /* FirebaseFirestore */,
 			);
 			productName = PetSwipe;
 			productReference = B8008AE32DDC0D9000A6419A /* PetSwipe.app */;
@@ -225,6 +231,7 @@
 			mainGroup = B8008ADA2DDC0D9000A6419A;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				16EB70A52DE6ADD100C789B1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B8008AE42DDC0D9000A6419A /* Products */;
@@ -591,6 +598,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		16EB70A52DE6ADD100C789B1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.13.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		16EB70A62DE6ADD100C789B1 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16EB70A52DE6ADD100C789B1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		16EB70A82DE6ADD100C789B1 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 16EB70A52DE6ADD100C789B1 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B8008ADB2DDC0D9000A6419A /* Project object */;
 }
