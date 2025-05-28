@@ -47,6 +47,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
+    // this will reset the profile variables everytime the app is built
+//    func sceneProfileReset(_ scene: UIScene,
+//               willConnectTo session: UISceneSession,
+//               options connectionOptions: UIScene.ConnectionOptions) {
+//        let keysToRemove = ["savedName", "savedEmail", "savedPhone"]
+//        for key in keysToRemove {
+//            UserDefaults.standard.removeObject(forKey: key)
+//        }
+//    }
 
 }
 
