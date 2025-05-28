@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1565D6EF2DE091D60048B443 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1565D6EE2DE091D60048B443 /* FirebaseCore */; };
-		1565D6F12DE091D60048B443 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 1565D6F02DE091D60048B443 /* FirebaseFirestore */; };
+		1657FAC22DE6B4A0005231DC /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1657FAC12DE6B4A0005231DC /* FirebaseCore */; };
+		1657FAC42DE6B4A0005231DC /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 1657FAC32DE6B4A0005231DC /* FirebaseFirestore */; };
+		16EAEE752DE5CCF800D47BBA /* pet_test.json in Resources */ = {isa = PBXBuildFile; fileRef = 16EAEE742DE5CCF800D47BBA /* pet_test.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +30,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		16EAEE742DE5CCF800D47BBA /* pet_test.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = pet_test.json; sourceTree = SOURCE_ROOT; };
 		B8008AE32DDC0D9000A6419A /* PetSwipe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PetSwipe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8008AF92DDC0D9100A6419A /* PetSwipeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PetSwipeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8008B032DDC0D9100A6419A /* PetSwipeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PetSwipeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -41,13 +43,6 @@
 				DatabaseTest.swift,
 			);
 			target = B8008AE22DDC0D9000A6419A /* PetSwipe */;
-		};
-		1565D6FA2DE099CA0048B443 /* Exceptions for "PetSwipe" folder in "PetSwipeTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"GoogleService-Info.plist",
-			);
-			target = B8008AF82DDC0D9100A6419A /* PetSwipeTests */;
 		};
 		B8008B0B2DDC0D9100A6419A /* Exceptions for "PetSwipe" folder in "PetSwipe" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -63,7 +58,6 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				B8008B0B2DDC0D9100A6419A /* Exceptions for "PetSwipe" folder in "PetSwipe" target */,
-				1565D6FA2DE099CA0048B443 /* Exceptions for "PetSwipe" folder in "PetSwipeTests" target */,
 			);
 			path = PetSwipe;
 			sourceTree = "<group>";
@@ -88,8 +82,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1565D6EF2DE091D60048B443 /* FirebaseCore in Frameworks */,
-				1565D6F12DE091D60048B443 /* FirebaseFirestore in Frameworks */,
+				1657FAC22DE6B4A0005231DC /* FirebaseCore in Frameworks */,
+				1657FAC42DE6B4A0005231DC /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -113,6 +107,7 @@
 		B8008ADA2DDC0D9000A6419A = {
 			isa = PBXGroup;
 			children = (
+				16EAEE742DE5CCF800D47BBA /* pet_test.json */,
 				B8008AE52DDC0D9000A6419A /* PetSwipe */,
 				B8008AFC2DDC0D9100A6419A /* PetSwipeTests */,
 				B8008B062DDC0D9100A6419A /* PetSwipeUITests */,
@@ -150,8 +145,8 @@
 			);
 			name = PetSwipe;
 			packageProductDependencies = (
-				1565D6EE2DE091D60048B443 /* FirebaseCore */,
-				1565D6F02DE091D60048B443 /* FirebaseFirestore */,
+				1657FAC12DE6B4A0005231DC /* FirebaseCore */,
+				1657FAC32DE6B4A0005231DC /* FirebaseFirestore */,
 			);
 			productName = PetSwipe;
 			productReference = B8008AE32DDC0D9000A6419A /* PetSwipe.app */;
@@ -236,7 +231,7 @@
 			mainGroup = B8008ADA2DDC0D9000A6419A;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				1565D6ED2DE091D60048B443 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				1657FAC02DE6B4A0005231DC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B8008AE42DDC0D9000A6419A /* Products */;
@@ -255,6 +250,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				16EAEE752DE5CCF800D47BBA /* pet_test.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -604,7 +600,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		1565D6ED2DE091D60048B443 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+		1657FAC02DE6B4A0005231DC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
@@ -615,14 +611,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		1565D6EE2DE091D60048B443 /* FirebaseCore */ = {
+		1657FAC12DE6B4A0005231DC /* FirebaseCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1565D6ED2DE091D60048B443 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 1657FAC02DE6B4A0005231DC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCore;
 		};
-		1565D6F02DE091D60048B443 /* FirebaseFirestore */ = {
+		1657FAC32DE6B4A0005231DC /* FirebaseFirestore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 1565D6ED2DE091D60048B443 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 1657FAC02DE6B4A0005231DC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
 		};
 /* End XCSwiftPackageProductDependency section */
