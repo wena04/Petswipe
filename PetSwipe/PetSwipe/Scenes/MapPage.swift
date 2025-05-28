@@ -6,15 +6,34 @@
 //
 
 import UIKit
+import MapKit
 
 class MapPage: UIViewController {
 
+    @IBOutlet weak var mapView: MKMapView!
+
+    let shelterLocation = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        setupMap()
         // Do any additional setup after loading the view.
     }
     
+    func setupMap() {
+        let region = MKCoordinateRegion(
+        center: shelterLocation,
+        latitudinalMeters: 1000, 
+        longitudinalMeters: 1000
+        )
+        mapView.setRegion(region, animated: true)
+
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = shelterLocation
+        annotation.title = "Local Animal Shelter"
+        annotation.subtitle = "Find your new best friend here!"
+        mapView.addAnnotation(annotation)
+    }
 
     /*
     // MARK: - Navigation
