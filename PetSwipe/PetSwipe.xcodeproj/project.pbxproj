@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1529F9012DE8A1200082CA8F /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 1529F9002DE8A1200082CA8F /* FirebaseAuth */; };
 		1565D6EF2DE091D60048B443 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1565D6EE2DE091D60048B443 /* FirebaseCore */; };
 		1565D6F12DE091D60048B443 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 1565D6F02DE091D60048B443 /* FirebaseFirestore */; };
 /* End PBXBuildFile section */
@@ -42,13 +43,6 @@
 			);
 			target = B8008AE22DDC0D9000A6419A /* PetSwipe */;
 		};
-		1565D6FA2DE099CA0048B443 /* Exceptions for "PetSwipe" folder in "PetSwipeTests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"GoogleService-Info.plist",
-			);
-			target = B8008AF82DDC0D9100A6419A /* PetSwipeTests */;
-		};
 		B8008B0B2DDC0D9100A6419A /* Exceptions for "PetSwipe" folder in "PetSwipe" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -63,7 +57,6 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				B8008B0B2DDC0D9100A6419A /* Exceptions for "PetSwipe" folder in "PetSwipe" target */,
-				1565D6FA2DE099CA0048B443 /* Exceptions for "PetSwipe" folder in "PetSwipeTests" target */,
 			);
 			path = PetSwipe;
 			sourceTree = "<group>";
@@ -89,6 +82,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1565D6EF2DE091D60048B443 /* FirebaseCore in Frameworks */,
+				1529F9012DE8A1200082CA8F /* FirebaseAuth in Frameworks */,
 				1565D6F12DE091D60048B443 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -110,12 +104,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1529F8FF2DE8A1200082CA8F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		B8008ADA2DDC0D9000A6419A = {
 			isa = PBXGroup;
 			children = (
 				B8008AE52DDC0D9000A6419A /* PetSwipe */,
 				B8008AFC2DDC0D9100A6419A /* PetSwipeTests */,
 				B8008B062DDC0D9100A6419A /* PetSwipeUITests */,
+				1529F8FF2DE8A1200082CA8F /* Frameworks */,
 				B8008AE42DDC0D9000A6419A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -152,6 +154,7 @@
 			packageProductDependencies = (
 				1565D6EE2DE091D60048B443 /* FirebaseCore */,
 				1565D6F02DE091D60048B443 /* FirebaseFirestore */,
+				1529F9002DE8A1200082CA8F /* FirebaseAuth */,
 			);
 			productName = PetSwipe;
 			productReference = B8008AE32DDC0D9000A6419A /* PetSwipe.app */;
@@ -615,6 +618,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1529F9002DE8A1200082CA8F /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1565D6ED2DE091D60048B443 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
 		1565D6EE2DE091D60048B443 /* FirebaseCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1565D6ED2DE091D60048B443 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
