@@ -12,15 +12,21 @@ import FirebaseCore
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
+        // jess - reset profile variables
+        let keysToRemove = ["savedName", "savedEmail", "savedPhone"]
+        for key in keysToRemove {
+            UserDefaults.standard.removeObject(forKey: key)
+        }
 
         // Init Firebase
         FirebaseApp.configure()
         testFetchPetsFromFirestore()
+        
         return true
     }
 
@@ -38,7 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
         
         // Check firebase config
-        print("Firebase configured: \(FirebaseApp.app() != nil)")
+//        print("Firebase configured: \(FirebaseApp.app() != nil)")
     }
 
 }

@@ -8,7 +8,24 @@
 // jessica test comment
 
 import Foundation
+import UIKit
 
 class Pet{
     
+}
+
+struct tempPet {
+        let name: String
+        let image: UIImage
+        let age: Int
+        let location: [Double] // [latitude, longitude]
+        let species: String
+}
+
+struct PetModel: Codable {
+    let name: String
+    let image: String
+    let age: Int
+    let location: [Double]
+    let species: String
 }
