@@ -1,0 +1,13 @@
+platform :ios, '15.0'
+
+target 'PetSwipe' do
+  use_frameworks!
+
+  # Firebase
+  pod 'Firebase/Core'
+  pod 'Firebase/Auth'
+
+  # Other dependencies you might need
+  pod 'Firebase/Firestore'
+  pod 'Firebase/Storage'
+end
