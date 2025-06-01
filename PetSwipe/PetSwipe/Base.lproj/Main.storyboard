@@ -239,7 +239,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Phone Number" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Xoo-2V-s68">
+                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Xoo-2V-s68" userLabel="Password Field">
                                 <rect key="frame" x="98" y="472" width="196" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="20"/>
@@ -260,7 +260,7 @@
                         <outlet property="emailField" destination="XGw-Sm-Urt" id="kOJ-N9-AYY"/>
                         <outlet property="nameField" destination="CEc-2I-dPh" id="JQT-TM-N1e"/>
                         <outlet property="nextButton" destination="pCb-Ga-VSp" id="fvY-sm-Twx"/>
-                        <outlet property="phoneField" destination="Xoo-2V-s68" id="2Tx-Rc-EY0"/>
+                        <outlet property="passwordField" destination="Xoo-2V-s68" id="lAf-eF-NMx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bzz-pa-1eV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
