@@ -82,8 +82,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1657FAC22DE6B4A0005231DC /* FirebaseCore in Frameworks */,
-				1657FAC42DE6B4A0005231DC /* FirebaseFirestore in Frameworks */,
+				1565D6EF2DE091D60048B443 /* FirebaseCore in Frameworks */,
+				1529F9012DE8A1200082CA8F /* FirebaseAuth in Frameworks */,
+				1565D6F12DE091D60048B443 /* FirebaseFirestore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,6 +105,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1529F8FF2DE8A1200082CA8F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		B8008ADA2DDC0D9000A6419A = {
 			isa = PBXGroup;
 			children = (
@@ -111,6 +119,7 @@
 				B8008AE52DDC0D9000A6419A /* PetSwipe */,
 				B8008AFC2DDC0D9100A6419A /* PetSwipeTests */,
 				B8008B062DDC0D9100A6419A /* PetSwipeUITests */,
+				1529F8FF2DE8A1200082CA8F /* Frameworks */,
 				B8008AE42DDC0D9000A6419A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -145,8 +154,9 @@
 			);
 			name = PetSwipe;
 			packageProductDependencies = (
-				1657FAC12DE6B4A0005231DC /* FirebaseCore */,
-				1657FAC32DE6B4A0005231DC /* FirebaseFirestore */,
+				1565D6EE2DE091D60048B443 /* FirebaseCore */,
+				1565D6F02DE091D60048B443 /* FirebaseFirestore */,
+				1529F9002DE8A1200082CA8F /* FirebaseAuth */,
 			);
 			productName = PetSwipe;
 			productReference = B8008AE32DDC0D9000A6419A /* PetSwipe.app */;
@@ -611,7 +621,12 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		1657FAC12DE6B4A0005231DC /* FirebaseCore */ = {
+		1529F9002DE8A1200082CA8F /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1565D6ED2DE091D60048B443 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		1565D6EE2DE091D60048B443 /* FirebaseCore */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1657FAC02DE6B4A0005231DC /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCore;
