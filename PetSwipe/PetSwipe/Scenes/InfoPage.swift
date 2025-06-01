@@ -24,7 +24,7 @@ class InfoPage: UIViewController {
         infoPageImage.image = pet.image
         
 
-            infoPageLabel.text = "Meet \(pet.name)!\n\(pet.name) is a \(pet.species), \(pet.age) years old. \n click the button below to adopt \(pet.name) as your new best friend!"
+            infoPageLabel.text = "Meet \(pet.name)!\n\(pet.name) is a \(pet.breed), \(pet.age) years old. \n click the button below to adopt \(pet.name) as your new best friend!"
     
 
     

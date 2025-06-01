@@ -26,7 +26,7 @@ struct FirestorePet: Codable {
     let petLocation: Location
 
     struct Location: Codable {
-        let altitude: Double
+        let latitude: Double
         let longitude: Double
     }
 }
@@ -66,7 +66,7 @@ func testFetchPetsFromFirestore() {
                     petAge: age,
                     petBreed: breed,
                     petPicture: picture,
-                    petLocation: FirestorePet.Location(altitude: altitude, longitude: longitude)
+                    petLocation: FirestorePet.Location(latitude: altitude, longitude: longitude)
                 )
                 pets.append(pet)
             }
@@ -78,7 +78,7 @@ func testFetchPetsFromFirestore() {
             • Age: \(pet.petAge)
             • Breed: \(pet.petBreed)
             • Picture: \(pet.petPicture)
-            • Location: (\(pet.petLocation.altitude), \(pet.petLocation.longitude))
+            • Location: (\(pet.petLocation.latitude), \(pet.petLocation.longitude))
             """)
         }
     }

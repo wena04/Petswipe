@@ -15,11 +15,12 @@ class Pet{
 }
 
 struct tempPet {
-        let name: String
-        let image: UIImage
-        let age: Int
-        let location: [Double] // [latitude, longitude]
-        let species: String
+    let name: String
+    let image: UIImage
+    let age: Int
+    let breed: String
+    let latitude: Double
+    let longitude: Double
 }
 
 struct PetModel: Codable {
