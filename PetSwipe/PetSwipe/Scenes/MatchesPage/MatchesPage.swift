@@ -23,7 +23,6 @@ class MatchesPage: UIViewController, UITableViewDelegate, UITableViewDataSource 
             return UITableViewCell()
         }
         cell.matchImage.image = pets[indexPath.row].image
-        cell.contentView.backgroundColor = .red
         cell.matchLabel.text = pets[indexPath.row].name
         return cell
     }
