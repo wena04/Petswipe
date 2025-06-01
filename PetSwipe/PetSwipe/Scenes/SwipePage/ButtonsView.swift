@@ -21,6 +21,8 @@ class ButtonsView: SwipeBaseView {
             sizeToFit: false
         ).new
         b.imageView?.contentMode = .scaleAspectFit
+        b.imageView?.tintColor = .systemPink
+        b.imageView?.transform = CGAffineTransform(scaleX: 2.0, y: 2.0)
         return b
     }()
 
@@ -33,6 +35,8 @@ class ButtonsView: SwipeBaseView {
             sizeToFit: false
         ).new
         b.imageView?.contentMode = .scaleAspectFit
+        b.imageView?.tintColor = .systemGray
+        b.imageView?.transform = CGAffineTransform(scaleX: 2.0, y: 2.0)
         return b
     }()
     
@@ -56,8 +60,8 @@ class ButtonsView: SwipeBaseView {
 
         [likeButton, passButton].forEach { button in
             NSLayoutConstraint.activate([
-                button.heightAnchor.constraint(equalToConstant: 30),
-                button.widthAnchor.constraint(equalToConstant: 30)
+                button.heightAnchor.constraint(equalToConstant: 100),
+                button.widthAnchor.constraint(equalToConstant: 100)
             ])
         }
     }
