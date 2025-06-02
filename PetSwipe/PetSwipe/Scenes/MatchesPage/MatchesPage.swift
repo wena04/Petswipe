@@ -6,13 +6,16 @@
 //
 
 import UIKit
+import FirebaseFirestore
+import FirebaseCore
 
-let pets: [tempPet] = [
-    tempPet(name: "Buddy", image: UIImage(named: "dog1") ?? UIImage(), age: 3, location: [47.6062, -122.3321], species: "Dog"),
-    tempPet(name: "Whiskers", image: UIImage(named: "cat1") ?? UIImage(), age: 2, location: [34.0522, -118.2437], species: "Cat"),
-    tempPet(name: "Chirpy", image: UIImage(named: "bird1") ?? UIImage(), age: 1, location: [40.7128, -74.0060], species: "Bird")
+var pets: [tempPet] = [
+//    tempPet(name: "Buddy", image: UIImage(named: "dog1") ?? UIImage(), age: 3, location: [47.6062, -122.3321], species: "Dog"),
+//    tempPet(name: "Whiskers", image: UIImage(named: "cat1") ?? UIImage(), age: 2, location: [34.0522, -118.2437], species: "Cat"),
+//    tempPet(name: "Chirpy", image: UIImage(named: "bird1") ?? UIImage(), age: 1, location: [40.7128, -74.0060], species: "Bird")
 ]
 
+// MARK: table cell logic
 class MatchesPage: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
       return  pets.count
@@ -39,9 +42,81 @@ class MatchesPage: UIViewController, UITableViewDelegate, UITableViewDataSource 
 
   
     @IBOutlet weak var MatchesTableView: UITableView!
+
+    
+// MARK: fetch from the firebase and populate
+    
+    func fetchPetsFromFirestore() {
+        let db = Firestore.firestore()
+
+        db.collection("pets").getDocuments { [weak self] snapshot, error in
+            guard let self = self else { return }
+
+            if let error = error {
+                print("❌ Error fetching pets: \(error.localizedDescription)")
+                return
+            }
+
+            guard let documents = snapshot?.documents else {
+                print("⚠️ No documents found")
+                return
+            }
+
+            var fetchedPets: [tempPet] = []
+            let dispatchGroup = DispatchGroup()
+
+            for document in documents {
+                do {
+                    let pet = try document.data(as: FirestorePet.self)
+                    dispatchGroup.enter()
+                    loadImage(from: pet.petPicture) { image in
+                        let convertedPet = tempPet(
+                            name: pet.petName,
+                            image: image ?? UIImage(),
+                            age: pet.petAge,
+                            breed: pet.petBreed,
+                            latitude: pet.petLocation.latitude,
+                            longitude: pet.petLocation.longitude
+                        )
+                        fetchedPets.append(convertedPet)
+                        dispatchGroup.leave()
+                    }
+                } catch {
+                    print("⚠️ Could not decode FirestorePet: \(error)")
+                }
+            }
+
+            dispatchGroup.notify(queue: .main) {
+                pets = fetchedPets
+                self.MatchesTableView.reloadData()
+            }
+        }
+    }
+    
+    func loadImage(from urlString: String, completion: @escaping (UIImage?) -> Void) {
+        guard let url = URL(string: urlString) else {
+            completion(nil)
+            return
+        }
+
+        URLSession.shared.dataTask(with: url) { data, _, _ in
+            if let data = data, let image = UIImage(data: data) {
+                completion(image)
+            } else {
+                completion(nil)
+            }
+        }.resume()
+    }
+
+    
+    
+    // MARK: when the user clicks on the actual page do the following:
+    
+    
     
     override func viewDidAppear(_ animated: Bool) {
-        MatchesTableView.reloadData()
+        super.viewDidAppear(animated)
+        fetchPetsFromFirestore()
     }
     
     
@@ -49,8 +124,8 @@ class MatchesPage: UIViewController, UITableViewDelegate, UITableViewDataSource 
         super.viewDidLoad()
         MatchesTableView.delegate = self
         MatchesTableView.dataSource = self
-
-
+        initializeFirebaseIfNeeded()
+        fetchPetsFromFirestore()
         // Do any additional setup after loading the view.
     }
     
