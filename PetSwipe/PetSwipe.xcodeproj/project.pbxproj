@@ -31,7 +31,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		16EAEE742DE5CCF800D47BBA /* pet_test.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = pet_test.json; sourceTree = SOURCE_ROOT; };
 		B8008AE32DDC0D9000A6419A /* PetSwipe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PetSwipe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8008AF92DDC0D9100A6419A /* PetSwipeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PetSwipeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8008B032DDC0D9100A6419A /* PetSwipeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PetSwipeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -116,7 +115,6 @@
 		B8008ADA2DDC0D9000A6419A = {
 			isa = PBXGroup;
 			children = (
-				16EAEE742DE5CCF800D47BBA /* pet_test.json */,
 				B8008AE52DDC0D9000A6419A /* PetSwipe */,
 				B8008AFC2DDC0D9100A6419A /* PetSwipeTests */,
 				B8008B062DDC0D9100A6419A /* PetSwipeUITests */,
@@ -261,7 +259,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				16EAEE752DE5CCF800D47BBA /* pet_test.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
