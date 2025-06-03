@@ -15,17 +15,32 @@ class Pet{
 }
 
 struct tempPet {
-        let name: String
-        let image: UIImage
-        let age: Int
-        let location: [Double] // [latitude, longitude]
-        let species: String
+    let name: String
+    var image: UIImage
+    let age: Int
+    let location: [Double] // [latitude, longitude]
+    let species: String
 }
 
 struct PetModel: Codable {
-    let name: String
-    let image: String
-    let age: Int
-    let location: [Double]
-    let species: String
+    let petName: String
+    let petPicture: String
+    let petAge: Int
+    let petLocation: Location
+    let petBreed: String
+    
+    struct Location: Codable {
+        let latitude: Double
+        let longitude: Double
+    }
+
+    func toTempPet(with image: UIImage) -> tempPet {
+        return tempPet(
+            name: petName,
+            image: image,
+            age: petAge,
+            location: [petLocation.latitude, petLocation.longitude],
+            species: petBreed
+        )
+    }
 }
