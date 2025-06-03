@@ -81,9 +81,9 @@ class PetCard: SwipeBaseView {
             ])
     }
     
-    func configure(with pet: tempPet) {
+    func configure(with pet: matchesPet) {
         nameLabel.text = pet.name
-        workLabel.text = "\(pet.species), Age: \(pet.age)"
+        workLabel.text = "\(pet.breed), Age: \(pet.age)"
         profileImageView.image = pet.image
     }
 }

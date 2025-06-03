@@ -2,7 +2,7 @@ import UIKit
 
 class SwipePage: UIViewController {
 
-    var pets: [tempPet] = []
+    var pets: [matchesPet] = []
     var currentIndex: Int = 0
     
     override func viewDidLoad() {
@@ -27,7 +27,7 @@ class SwipePage: UIViewController {
             switch result {
             case .success(let petModels):
                 self?.pets = petModels.map { model in
-                    model.toTempPet(with: UIImage(named: "placeholder_pet") ?? UIImage())
+                    model.toMatchesPet(with: UIImage(named: "placeholder_pet") ?? UIImage())
                 }
                 
                 for (index, model) in petModels.enumerated() {

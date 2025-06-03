@@ -28,7 +28,7 @@ class MapPage: UIViewController {
                    fatalError("No pet provided")
                }
         
-        shelterLocation = CLLocationCoordinate2D(latitude: pet.latitude, longitude: pet.longitude)
+        shelterLocation = CLLocationCoordinate2D(latitude: pet.location[0], longitude: pet.location[1])
         let region = MKCoordinateRegion(
         center: shelterLocation,
         latitudinalMeters: 1000, 

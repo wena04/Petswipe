@@ -34,8 +34,8 @@ struct PetModel: Codable {
         let longitude: Double
     }
 
-    func toTempPet(with image: UIImage) -> tempPet {
-        return tempPet(
+    func toMatchesPet(with image: UIImage) -> matchesPet {
+        return matchesPet(
             name: petName,
             image: image,
             age: petAge,
