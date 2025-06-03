@@ -71,6 +71,7 @@ class MatchesPage: UIViewController, UITableViewDelegate, UITableViewDataSource 
                     dispatchGroup.enter()
                     loadImage(from: pet.petPicture) { image in
                         let convertedPet = matchesPet(
+                            id: document.documentID,
                             name: pet.petName,
                             image: image ?? UIImage(),
                             age: pet.petAge,

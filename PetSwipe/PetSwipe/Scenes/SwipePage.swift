@@ -14,11 +14,11 @@ class SwipePage: UIViewController {
         loadPetsFromFirebase()
 
         buttonsContainer.onLike = { [weak self] in
-            self?.goToNextPet()
+            self?.likePet()
         }
 
         buttonsContainer.onPass = { [weak self] in
-            self?.goToNextPet()
+            self?.passPet()
         }
     }
     
@@ -101,11 +101,47 @@ class SwipePage: UIViewController {
         ])
     }
     
+    func likePet() {
+        guard currentIndex < pets.count else { return }
+        
+        let likedPet = pets[currentIndex]
+        
+        FirebaseManager.shared.addLikedPet(petId: likedPet.id) { [weak self] error in
+            if let error = error {
+                print("Failed to save liked pet: \(error)")
+                DispatchQueue.main.async {
+                    self?.showError(message: "Failed to save your like. Please try again.")
+                }
+            } else {
+                print("Successfully liked pet: \(likedPet.name)")
+            }
+        }
+        
+        goToNextPet()
+    }
+    
+    func passPet() {
+        print("Passed on pet: \(pets[currentIndex].name)")
+        goToNextPet()
+    }
+    
     @objc func swipeCard(sender: UIPanGestureRecognizer) {
         sender.swipeView(petCard)
 
         if sender.state == .ended {
-            goToNextPet()
+            let translation = sender.translation(in: petCard)
+            let velocity = sender.velocity(in: petCard)
+
+            let isRightSwipe = translation.x > 50 || velocity.x > 500
+            let isLeftSwipe = translation.x < -50 || velocity.x < -500
+            
+            if isRightSwipe {
+                passPet()
+            } else if isLeftSwipe {
+                likePet()
+            } else {
+                goToNextPet()
+            }
         }
     }
     

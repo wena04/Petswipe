@@ -76,6 +76,7 @@ class FirebaseManager {
                 }
                 
                 return PetModel(
+                    id: document.documentID,
                     petName: petName,
                     petPicture: petPicture,
                     petAge: petAge,
@@ -104,5 +105,73 @@ class FirebaseManager {
                 completion(UIImage(data: data))
             }
         }.resume()
+    }
+    
+    // user liked pets methods
+    
+    func addLikedPet(petId: String, completion: @escaping (Error?) -> Void) {
+        guard let user = getCurrentUser() else {
+            completion(NSError(domain: "FirebaseManager", code: 0, userInfo: [NSLocalizedDescriptionKey: "No authenticated user"]))
+            return
+        }
+        
+        let userRef = db.collection("users").document(user.uid)
+        
+        userRef.updateData([
+            "likedPets": FieldValue.arrayUnion([petId]),
+            "lastUpdated": Timestamp()
+        ]) { error in
+            if let error = error {
+                print("Error adding liked pet: \(error)")
+            } else {
+                print("Pet \(petId) added to liked pets")
+            }
+            completion(error)
+        }
+    }
+    
+    func removeLikedPet(petId: String, completion: @escaping (Error?) -> Void) {
+        guard let user = getCurrentUser() else {
+            completion(NSError(domain: "FirebaseManager", code: 0, userInfo: [NSLocalizedDescriptionKey: "No authenticated user"]))
+            return
+        }
+        
+        let userRef = db.collection("users").document(user.uid)
+        
+        userRef.updateData([
+            "likedPets": FieldValue.arrayRemove([petId]),
+            "lastUpdated": Timestamp()
+        ]) { error in
+            if let error = error {
+                print("Error removing liked pet: \(error)")
+            } else {
+                print("Pet \(petId) removed from liked pets")
+            }
+            completion(error)
+        }
+    }
+    
+    func fetchLikedPets(completion: @escaping (Result<[String], Error>) -> Void) {
+        guard let user = getCurrentUser() else {
+            completion(.failure(NSError(domain: "FirebaseManager", code: 0, userInfo: [NSLocalizedDescriptionKey: "No authenticated user"])))
+            return
+        }
+        
+        let userRef = db.collection("users").document(user.uid)
+        
+        userRef.getDocument { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let data = snapshot?.data(),
+                  let likedPets = data["likedPets"] as? [String] else {
+                completion(.success([]))
+                return
+            }
+            
+            completion(.success(likedPets))
+        }
     }
 }

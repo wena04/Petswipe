@@ -15,6 +15,7 @@ class Pet{
 }
 
 struct matchesPet {
+    let id: String
     let name: String
     var image: UIImage
     let age: Int
@@ -23,6 +24,7 @@ struct matchesPet {
 }
 
 struct PetModel: Codable {
+    let id: String
     let petName: String
     let petPicture: String
     let petAge: Int
@@ -36,6 +38,7 @@ struct PetModel: Codable {
 
     func toMatchesPet(with image: UIImage) -> matchesPet {
         return matchesPet(
+            id: id,
             name: petName,
             image: image,
             age: petAge,
