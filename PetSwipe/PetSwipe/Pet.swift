@@ -14,7 +14,7 @@ class Pet{
     
 }
 
-struct tempPet {
+struct matchesPet {
     let name: String
     var image: UIImage
     let age: Int

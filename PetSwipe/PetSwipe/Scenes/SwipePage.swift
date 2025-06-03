@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  PetSwipe
-//
-//  Created by George Lee on 5/19/25.
-//
-
 import UIKit
 
 class SwipePage: UIViewController {
@@ -27,7 +20,6 @@ class SwipePage: UIViewController {
         buttonsContainer.onPass = { [weak self] in
             self?.goToNextPet()
         }
-
     }
     
     func loadPetsFromFirebase() {
@@ -74,7 +66,7 @@ class SwipePage: UIViewController {
 
     lazy var petCard: PetCard = {
         let tc = PetCard()
-       tc.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(swipeCard(sender:))))
+        tc.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(swipeCard(sender:))))
         return tc
     }()
     
@@ -123,4 +115,3 @@ class SwipePage: UIViewController {
         petCard.profileImageView.image = nil
     }
 }
-

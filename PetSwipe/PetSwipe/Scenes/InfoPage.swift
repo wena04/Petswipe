@@ -9,12 +9,20 @@ import UIKit
 
 
 class InfoPage: UIViewController {
-    var pet: tempPet?
+    var pet: matchesPet?
 
     @IBOutlet weak var infoPageImage: UIImageView!
 
     @IBOutlet weak var infoPageLabel: UILabel!
     
+    @IBAction func handleFindPet(_ sender: Any) {
+        let selectedPet = pet
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let MapPage = storyboard.instantiateViewController(withIdentifier: "MapPage") as? MapPage {
+            MapPage.pet = selectedPet
+            navigationController?.pushViewController(MapPage, animated: true)
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         guard let pet = pet else {

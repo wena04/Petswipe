@@ -9,10 +9,12 @@ import UIKit
 import MapKit
 
 class MapPage: UIViewController {
+    
+    var pet : matchesPet?
 
     @IBOutlet weak var mapView: MKMapView!
 
-    let shelterLocation = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
+    var shelterLocation = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,6 +23,12 @@ class MapPage: UIViewController {
     }
     
     func setupMap() {
+        
+        guard let pet = pet else {
+                   fatalError("No pet provided")
+               }
+        
+        shelterLocation = CLLocationCoordinate2D(latitude: pet.latitude, longitude: pet.longitude)
         let region = MKCoordinateRegion(
         center: shelterLocation,
         latitudinalMeters: 1000, 
