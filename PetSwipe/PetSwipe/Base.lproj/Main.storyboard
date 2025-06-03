@@ -116,7 +116,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Find My Pet!"/>
                                 <connections>
-                                    <segue destination="Jfc-J0-cro" kind="show" id="rpz-ij-gip"/>
+                                    <action selector="handleFindPet:" destination="A7x-OP-Dc3" eventType="touchUpInside" id="z0a-n5-SvV"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="u8u-8i-eMQ">
