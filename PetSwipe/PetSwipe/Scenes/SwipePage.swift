@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  PetSwipe
-//
-//  Created by George Lee on 5/19/25.
-//
-
 import UIKit
 
 class SwipePage: UIViewController {
@@ -14,19 +7,13 @@ class SwipePage: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
         view.backgroundColor = .white
         
         setUpViews()
-
-     //   pets = loadPets()
-        print("Loaded pets: \(pets.count)")
-
-        if let first = pets.first {
-            petCard.configure(with: first)
-        }
-
+        
+        loadPetsFromFirebase()
+        
         buttonsContainer.onLike = { [weak self] in
             self?.goToNextPet()
         }
@@ -34,41 +21,53 @@ class SwipePage: UIViewController {
         buttonsContainer.onPass = { [weak self] in
             self?.goToNextPet()
         }
-
     }
     
-    func loadPets() -> [PetModel] {
-        guard let url = Bundle.main.url(forResource: "pet_test", withExtension: "json") else {
-            print("Could not find file in bundle.")
-            return []
-        }
-
-        do {
-            let data = try Data(contentsOf: url)
-            let petModels = try JSONDecoder().decode([PetModel].self, from: data)
-            print("Decoded \(petModels.count) pets from JSON.")
-            return petModels.map { model in
-                if UIImage(named: model.image) == nil {
-                    print("Missing image: \(model.image)")
+    func loadPetsFromFirebase() {
+        FirebaseManager.shared.fetchPets { [weak self] result in
+            switch result {
+            case .success(let petModels):
+                self?.pets = petModels.map { model in
+                    model.toTempPet(with: UIImage(named: "placeholder_pet") ?? UIImage())
                 }
-                return PetModel(
-                    name: model.name,
-                    image: (UIImage(named: model.image) ?? UIImage()) as! String,
-                    age: model.age,
-                    location: model.location,
-                    species: model.species
-                )
+                
+                for (index, model) in petModels.enumerated() {
+                    FirebaseManager.shared.downloadImage(from: model.petPicture) { [weak self] image in
+                        if let image = image {
+                            self?.pets[index].image = image
+                            if index == self?.currentIndex {
+                                DispatchQueue.main.async {
+                                    self?.petCard.configure(with: self?.pets[index] ?? self!.pets[0])
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                DispatchQueue.main.async {
+                    if let first = self?.pets.first {
+                        self?.petCard.configure(with: first)
+                    }
+                }
+                
+            case .failure(let error):
+                print("Error loading pets: \(error)")
+                DispatchQueue.main.async {
+                    self?.showError(message: "Failed to load pets. Please try again later.")
+                }
             }
-        } catch {
-            print("JSON decoding error: \(error)")
-            return []
         }
     }
-
+    
+    func showError(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
 
     lazy var petCard: PetCard = {
         let tc = PetCard()
-       tc.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(swipeCard(sender:))))
+        tc.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(swipeCard(sender:))))
         return tc
     }()
     
@@ -99,7 +98,7 @@ class SwipePage: UIViewController {
             buttonsContainer.topAnchor.constraint(equalTo: petCard.bottomAnchor, constant: 50),
             buttonsContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             buttonsContainer.widthAnchor.constraint(equalTo: petCard.widthAnchor),
-            buttonsContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20) // pin
+            buttonsContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
         ])
     }
     
@@ -117,4 +116,3 @@ class SwipePage: UIViewController {
         petCard.profileImageView.image = nil
     }
 }
-
