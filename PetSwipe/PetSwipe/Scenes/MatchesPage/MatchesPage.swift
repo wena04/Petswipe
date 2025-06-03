@@ -9,7 +9,7 @@ import UIKit
 import FirebaseFirestore
 import FirebaseCore
 
-var pets: [tempPet] = [
+var pets: [matchesPet] = [
 //    tempPet(name: "Buddy", image: UIImage(named: "dog1") ?? UIImage(), age: 3, location: [47.6062, -122.3321], species: "Dog"),
 //    tempPet(name: "Whiskers", image: UIImage(named: "cat1") ?? UIImage(), age: 2, location: [34.0522, -118.2437], species: "Cat"),
 //    tempPet(name: "Chirpy", image: UIImage(named: "bird1") ?? UIImage(), age: 1, location: [40.7128, -74.0060], species: "Bird")
@@ -62,7 +62,7 @@ class MatchesPage: UIViewController, UITableViewDelegate, UITableViewDataSource 
                 return
             }
 
-            var fetchedPets: [tempPet] = []
+            var fetchedPets: [matchesPet] = []
             let dispatchGroup = DispatchGroup()
 
             for document in documents {
@@ -70,7 +70,7 @@ class MatchesPage: UIViewController, UITableViewDelegate, UITableViewDataSource 
                     let pet = try document.data(as: FirestorePet.self)
                     dispatchGroup.enter()
                     loadImage(from: pet.petPicture) { image in
-                        let convertedPet = tempPet(
+                        let convertedPet = matchesPet(
                             name: pet.petName,
                             image: image ?? UIImage(),
                             age: pet.petAge,

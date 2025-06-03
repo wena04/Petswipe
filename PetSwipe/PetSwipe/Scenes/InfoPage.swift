@@ -9,7 +9,7 @@ import UIKit
 
 
 class InfoPage: UIViewController {
-    var pet: tempPet?
+    var pet: matchesPet?
 
     @IBOutlet weak var infoPageImage: UIImageView!
 

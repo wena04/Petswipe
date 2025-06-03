@@ -37,34 +37,34 @@ class SwipePage: UIViewController {
 
     }
     
-//    func loadPets() -> [PetModel] {
-//        guard let url = Bundle.main.url(forResource: "pet_test", withExtension: "json") else {
-//            print("Could not find file in bundle.")
-//            return []
-//        }
-//
-//        do {
-//            let data = try Data(contentsOf: url)
-//            let petModels = try JSONDecoder().decode([PetModel].self, from: data)
-//            print("Decoded \(petModels.count) pets from JSON.")
-//            return petModels.map { model in
-//                if UIImage(named: model.image) == nil {
-//                    print("Missing image: \(model.image)")
-//                }
-//                return PetModel(
-//                    name: model.name,
-//                    image: UIImage(named: model.image) ?? UIImage(),
-//                    age: model.age,
-//                    location: model.location,
-//                    species: model.species
-//                )
-//            }
-//        } catch {
-//            print("JSON decoding error: \(error)")
-//            return []
-//        }
-//    }
-//
+    func loadPets() -> [PetModel] {
+        guard let url = Bundle.main.url(forResource: "pet_test", withExtension: "json") else {
+            print("Could not find file in bundle.")
+            return []
+        }
+
+        do {
+            let data = try Data(contentsOf: url)
+            let petModels = try JSONDecoder().decode([PetModel].self, from: data)
+            print("Decoded \(petModels.count) pets from JSON.")
+            return petModels.map { model in
+                if UIImage(named: model.image) == nil {
+                    print("Missing image: \(model.image)")
+                }
+                return PetModel(
+                    name: model.name,
+                    image: (UIImage(named: model.image) ?? UIImage()) as! String,
+                    age: model.age,
+                    location: model.location,
+                    species: model.species
+                )
+            }
+        } catch {
+            print("JSON decoding error: \(error)")
+            return []
+        }
+    }
+
 
     lazy var petCard: PetCard = {
         let tc = PetCard()

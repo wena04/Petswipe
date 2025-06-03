@@ -14,6 +14,15 @@ class Pet{
     
 }
 
+struct matchesPet {
+    let name: String
+    let image: UIImage
+    let age: Int
+    let breed: String
+    let latitude: Double
+    let longitude: Double
+}
+
 struct tempPet {
     let name: String
     let image: UIImage
