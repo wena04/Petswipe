@@ -74,9 +74,8 @@ class MatchesPage: UIViewController, UITableViewDelegate, UITableViewDataSource 
                             name: pet.petName,
                             image: image ?? UIImage(),
                             age: pet.petAge,
-                            breed: pet.petBreed,
-                            latitude: pet.petLocation.latitude,
-                            longitude: pet.petLocation.longitude
+                            location: [pet.petLocation.latitude, pet.petLocation.longitude],
+                            breed: pet.petBreed
                         )
                         fetchedPets.append(convertedPet)
                         dispatchGroup.leave()

@@ -19,7 +19,7 @@ struct tempPet {
     var image: UIImage
     let age: Int
     let location: [Double] // [latitude, longitude]
-    let species: String
+    let breed: String
 }
 
 struct PetModel: Codable {
@@ -40,7 +40,7 @@ struct PetModel: Codable {
             image: image,
             age: petAge,
             location: [petLocation.latitude, petLocation.longitude],
-            species: petBreed
+            breed: petBreed
         )
     }
 }
