@@ -4,6 +4,7 @@ class SwipePage: UIViewController {
 
     var pets: [matchesPet] = []
     var currentIndex: Int = 0
+    var userPreferences: UserPreferences?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -11,6 +12,7 @@ class SwipePage: UIViewController {
         view.backgroundColor = .white
         
         setUpViews()
+        loadUserPreferences()
         loadPetsFromFirebase()
 
         buttonsContainer.onLike = { [weak self] in
@@ -22,10 +24,34 @@ class SwipePage: UIViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        loadUserPreferences()
+        loadPetsFromFirebase()
+    }
+    
+    func loadUserPreferences() {
+        FirebaseManager.shared.fetchUserPreferences { [weak self] result in
+            switch result {
+            case .success(let preferences):
+                self?.userPreferences = preferences
+                print("✅ User preferences loaded: Age range \(preferences.minAge)-\(preferences.maxAge), Distance: \(preferences.distance)mi")
+            case .failure(let error):
+                print("⚠️ Failed to load user preferences: \(error)")
+            }
+        }
+    }
+    
     func loadPetsFromFirebase() {
-        FirebaseManager.shared.fetchPets { [weak self] result in
+        FirebaseManager.shared.fetchFilteredPets { [weak self] result in
             switch result {
             case .success(let petModels):
+                print("🐾 Loaded \(petModels.count) pets matching user preferences")
+                
+                let ages = petModels.map { $0.petAge }
+                print("Pet ages shown: \(ages)")
+                
                 self?.pets = petModels.map { model in
                     model.toMatchesPet(with: UIImage(named: "placeholder_pet") ?? UIImage())
                 }
@@ -44,13 +70,16 @@ class SwipePage: UIViewController {
                 }
                 
                 DispatchQueue.main.async {
+                    self?.currentIndex = 0
                     if let first = self?.pets.first {
                         self?.petCard.configure(with: first)
+                    } else {
+                        self?.showNoMatchingPetsMessage()
                     }
                 }
                 
             case .failure(let error):
-                print("Error loading pets: \(error)")
+                print("❌ Error loading pets: \(error)")
                 DispatchQueue.main.async {
                     self?.showError(message: "Failed to load pets. Please try again later.")
                 }
@@ -62,6 +91,12 @@ class SwipePage: UIViewController {
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
+    }
+    
+    func showNoMatchingPetsMessage() {
+        petCard.nameLabel.text = "No pets match your preferences 🐕"
+        petCard.workLabel.text = "Try adjusting your age range in settings"
+        petCard.profileImageView.image = UIImage(systemName: "heart.slash")
     }
 
     lazy var petCard: PetCard = {

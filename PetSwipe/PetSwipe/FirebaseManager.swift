@@ -51,6 +51,35 @@ class FirebaseManager {
 
     // pet methods
     
+    func fetchUserPreferences(completion: @escaping (Result<UserPreferences, Error>) -> Void) {
+        guard let user = getCurrentUser() else {
+            completion(.failure(NSError(domain: "FirebaseManager", code: 0, userInfo: [NSLocalizedDescriptionKey: "No authenticated user"])))
+            return
+        }
+        
+        let userRef = db.collection("users").document(user.uid)
+        
+        userRef.getDocument { snapshot, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            guard let data = snapshot?.data(),
+                  let preferencesData = data["preferences"] as? [String: Any] else {
+                completion(.success(UserPreferences()))
+                return
+            }
+            
+            let ageRange = preferencesData["ageRange"] as? [Int] ?? [1, 10]
+            let distance = preferencesData["distance"] as? Int ?? 50
+            let breeds = preferencesData["breeds"] as? [String] ?? []
+            
+            let preferences = UserPreferences(ageRange: ageRange, distance: distance, breeds: breeds)
+            completion(.success(preferences))
+        }
+    }
+
     func fetchPets(completion: @escaping (Result<[PetModel], Error>) -> Void) {
         db.collection("pets").getDocuments { snapshot, error in
             if let error = error {
@@ -86,6 +115,28 @@ class FirebaseManager {
             }
             
             completion(.success(pets))
+        }
+    }
+    
+    func fetchFilteredPets(completion: @escaping (Result<[PetModel], Error>) -> Void) {
+        fetchUserPreferences { [weak self] result in
+            switch result {
+            case .success(let preferences):
+                self?.fetchPets { petsResult in
+                    switch petsResult {
+                    case .success(let allPets):
+                        let filteredPets = allPets.filter { pet in
+                            return pet.petAge >= preferences.minAge && pet.petAge <= preferences.maxAge
+                        }
+                        completion(.success(filteredPets))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                }
+            case .failure(let error):   
+                print("Could not fetch user preferences, showing all pets: \(error)")
+                self?.fetchPets(completion: completion)
+            }
         }
     }
     
