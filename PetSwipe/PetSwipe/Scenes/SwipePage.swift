@@ -1,10 +1,14 @@
 import UIKit
+import CoreLocation
 
 class SwipePage: UIViewController {
 
     var pets: [matchesPet] = []
     var currentIndex: Int = 0
     var userPreferences: UserPreferences?
+    var userLocation: CLLocation?
+    
+    private let locationManager = CLLocationManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -12,6 +16,7 @@ class SwipePage: UIViewController {
         view.backgroundColor = .white
         
         setUpViews()
+        setupLocationServices()
         loadUserPreferences()
         loadPetsFromFirebase()
 
@@ -31,26 +36,44 @@ class SwipePage: UIViewController {
         loadPetsFromFirebase()
     }
     
+    private func setupLocationServices() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+            
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.startUpdatingLocation()
+        }
+    }
+    
     func loadUserPreferences() {
         FirebaseManager.shared.fetchUserPreferences { [weak self] result in
             switch result {
             case .success(let preferences):
                 self?.userPreferences = preferences
-                print("✅ User preferences loaded: Age range \(preferences.minAge)-\(preferences.maxAge), Distance: \(preferences.distance)mi")
+                print("User preferences loaded: Age range \(preferences.minAge)-\(preferences.maxAge), Distance: \(preferences.distance)mi")
             case .failure(let error):
-                print("⚠️ Failed to load user preferences: \(error)")
+                print("Failed to load user preferences: \(error)")
             }
         }
     }
     
     func loadPetsFromFirebase() {
-        FirebaseManager.shared.fetchFilteredPets { [weak self] result in
+        FirebaseManager.shared.fetchPetsWithLocationFilter(userLocation: userLocation, userPreferences: userPreferences) { [weak self] result in
             switch result {
             case .success(let petModels):
-                print("🐾 Loaded \(petModels.count) pets matching user preferences")
                 
                 let ages = petModels.map { $0.petAge }
+                let distances = petModels.map { pet -> String in
+                    if let userLoc = self?.userLocation {
+                        let petLoc = CLLocation(latitude: pet.petLocation.latitude, longitude: pet.petLocation.longitude)
+                        let distanceInMiles = userLoc.distance(from: petLoc) * 0.000621371
+                        return String(format: "%.1fmi", distanceInMiles)
+                    }
+                    return "unknown"
+                }
                 print("Pet ages shown: \(ages)")
+                print("Pet distances: \(distances)")
                 
                 self?.pets = petModels.map { model in
                     model.toMatchesPet(with: UIImage(named: "placeholder_pet") ?? UIImage())
@@ -58,11 +81,13 @@ class SwipePage: UIViewController {
                 
                 for (index, model) in petModels.enumerated() {
                     FirebaseManager.shared.downloadImage(from: model.petPicture) { [weak self] image in
-                        if let image = image {
-                            self?.pets[index].image = image
-                            if index == self?.currentIndex {
+                        if let image = image, let strongSelf = self, index < strongSelf.pets.count {
+                            strongSelf.pets[index].image = image
+                            if index == strongSelf.currentIndex && index < strongSelf.pets.count {
                                 DispatchQueue.main.async {
-                                    self?.petCard.configure(with: self?.pets[index] ?? self!.pets[0])
+                                    if strongSelf.currentIndex < strongSelf.pets.count {
+                                        strongSelf.petCard.configure(with: strongSelf.pets[strongSelf.currentIndex])
+                                    }
                                 }
                             }
                         }
@@ -71,7 +96,7 @@ class SwipePage: UIViewController {
                 
                 DispatchQueue.main.async {
                     self?.currentIndex = 0
-                    if let first = self?.pets.first {
+                    if let first = self?.pets.first, !petModels.isEmpty {
                         self?.petCard.configure(with: first)
                     } else {
                         self?.showNoMatchingPetsMessage()
@@ -79,7 +104,7 @@ class SwipePage: UIViewController {
                 }
                 
             case .failure(let error):
-                print("❌ Error loading pets: \(error)")
+                print("Error loading pets: \(error)")
                 DispatchQueue.main.async {
                     self?.showError(message: "Failed to load pets. Please try again later.")
                 }
@@ -94,8 +119,8 @@ class SwipePage: UIViewController {
     }
     
     func showNoMatchingPetsMessage() {
-        petCard.nameLabel.text = "No pets match your preferences 🐕"
-        petCard.workLabel.text = "Try adjusting your age range in settings"
+        petCard.nameLabel.text = "No pets match your preferences"
+        petCard.workLabel.text = "Try adjusting your settings or distance preferences"
         petCard.profileImageView.image = UIImage(systemName: "heart.slash")
     }
 
@@ -111,6 +136,11 @@ class SwipePage: UIViewController {
     }()
     
     func goToNextPet() {
+        guard !pets.isEmpty else {
+            showEndMessage()
+            return
+        }
+        
         currentIndex += 1
         if currentIndex < pets.count {
             petCard.configure(with: pets[currentIndex])
@@ -145,7 +175,7 @@ class SwipePage: UIViewController {
             if let error = error {
                 print("Failed to save liked pet: \(error)")
                 DispatchQueue.main.async {
-                    self?.showError(message: "Failed to save your like. Please try again.")
+                    self?.showError(message: "Failed to save like")
                 }
             } else {
                 print("Successfully liked pet: \(likedPet.name)")
@@ -156,11 +186,19 @@ class SwipePage: UIViewController {
     }
     
     func passPet() {
+        guard currentIndex < pets.count else { 
+            print("No more pets to pass")
+            return 
+        }
         print("Passed on pet: \(pets[currentIndex].name)")
         goToNextPet()
     }
     
     @objc func swipeCard(sender: UIPanGestureRecognizer) {
+        guard currentIndex < pets.count && !pets.isEmpty else {
+            return
+        }
+        
         sender.swipeView(petCard)
 
         if sender.state == .ended {
@@ -184,5 +222,37 @@ class SwipePage: UIViewController {
         petCard.nameLabel.text = "No more recommended 🐶"
         petCard.workLabel.text = ""
         petCard.profileImageView.image = nil
+    }
+}
+
+extension SwipePage: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.first else { return }
+        userLocation = location
+        
+        print("User location updated: \(location.coordinate.latitude), \(location.coordinate.longitude)")
+        
+        loadPetsFromFirebase()
+        
+        locationManager.stopUpdatingLocation()
+    }
+    
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        switch manager.authorizationStatus {
+        case .authorizedWhenInUse, .authorizedAlways:
+            locationManager.startUpdatingLocation()
+        case .denied, .restricted:
+            print("Location access denied. Showing all pets without distance filtering.")
+            loadPetsFromFirebase()
+        case .notDetermined:
+            locationManager.requestWhenInUseAuthorization()
+        @unknown default:
+            break
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print("Failed to get location: \(error.localizedDescription)")
+        loadPetsFromFirebase()
     }
 }

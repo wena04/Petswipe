@@ -2,6 +2,7 @@ import Foundation
 import Firebase
 import FirebaseAuth
 import FirebaseFirestore
+import CoreLocation
 
 class FirebaseManager {
     static let shared = FirebaseManager()
@@ -136,6 +137,53 @@ class FirebaseManager {
             case .failure(let error):   
                 print("Could not fetch user preferences, showing all pets: \(error)")
                 self?.fetchPets(completion: completion)
+            }
+        }
+    }
+    
+    func fetchPetsWithLocationFilter(userLocation: CLLocation?, userPreferences: UserPreferences?, completion: @escaping (Result<[PetModel], Error>) -> Void) {
+        if let preferences = userPreferences {
+            performLocationFiltering(with: preferences, userLocation: userLocation, completion: completion)
+        } else {
+            fetchUserPreferences { [weak self] result in
+                switch result {
+                case .success(let preferences):
+                    self?.performLocationFiltering(with: preferences, userLocation: userLocation, completion: completion)
+                case .failure(let error):
+                    print("Could not fetch user preferences, showing all pets: \(error)")
+                    self?.fetchPets(completion: completion)
+                }
+            }
+        }
+    }
+    
+    private func performLocationFiltering(with preferences: UserPreferences, userLocation: CLLocation?, completion: @escaping (Result<[PetModel], Error>) -> Void) {
+        fetchPets { petsResult in
+            switch petsResult {
+            case .success(let allPets):
+                let filteredPets = allPets.filter { pet in
+                    let ageMatch = pet.petAge >= preferences.minAge && pet.petAge <= preferences.maxAge
+                    
+                    let distanceMatch: Bool
+                    if let userLoc = userLocation {
+                        let petLocation = CLLocation(latitude: pet.petLocation.latitude, longitude: pet.petLocation.longitude)
+                        let distanceInMeters = userLoc.distance(from: petLocation)
+                        let distanceInMiles = distanceInMeters * 0.000621371
+                        distanceMatch = distanceInMiles <= Double(preferences.distance)
+                        
+                        print("\(pet.petName): Age \(pet.petAge), Distance: \(String(format: "%.1f", distanceInMiles))mi (max: \(preferences.distance)mi)")
+                    } else {
+                        distanceMatch = true
+                        print("\(pet.petName): Age \(pet.petAge), No location available for distance filtering")
+                    }
+                    
+                    return ageMatch && distanceMatch
+                }
+                
+                print("Filtered pets: \(filteredPets.count)/\(allPets.count) match criteria")
+                completion(.success(filteredPets))
+            case .failure(let error):
+                completion(.failure(error))
             }
         }
     }
