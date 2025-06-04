@@ -7,20 +7,33 @@
 
 import UIKit
 import MapKit
+import CoreLocation
 
-class MapPage: UIViewController {
-    
-    var pet : matchesPet?
+class MapPage: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
 
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var distanceLabel: UILabel!
+    var pet : matchesPet?
 
+    let locationManager = CLLocationManager()
+    var userLocation: CLLocation?
     var shelterLocation = CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194)
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        mapView.delegate = self
+        setupLocationServices()
         setupMap()
         // Do any additional setup after loading the view.
     }
+    
+    func setupLocationServices() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.startUpdatingLocation()
+            mapView.showsUserLocation = true
+        }
     
     func setupMap() {
         
@@ -42,6 +55,20 @@ class MapPage: UIViewController {
         annotation.subtitle = "Find your new best friend here!"
         mapView.addAnnotation(annotation)
     }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+            if let location = locations.first {
+                userLocation = location
+
+                let shelterLoc = CLLocation(latitude: shelterLocation.latitude, longitude: shelterLocation.longitude)
+                let distanceInMeters = location.distance(from: shelterLoc)
+                let distanceInMiles = distanceInMeters * 0.000621371
+
+                distanceLabel.text = String(format: "Distance to shelter: %.2f miles", distanceInMiles)
+
+                locationManager.stopUpdatingLocation()
+            }
+        }
 
     /*
     // MARK: - Navigation

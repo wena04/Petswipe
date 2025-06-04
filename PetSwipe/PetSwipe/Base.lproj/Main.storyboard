@@ -461,8 +461,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Distance to shelter: -- miles" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jaB-iM-eOE" customClass="distanceLabel">
+                                <rect key="frame" x="104" y="89" width="211" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GoZ-R7-qBN" customClass="Map">
-                                <rect key="frame" x="0.0" y="118" width="393" height="609"/>
+                                <rect key="frame" x="-21" y="141" width="436" height="630"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <standardMapConfiguration key="preferredConfiguration"/>
                             </mapView>
@@ -472,12 +479,13 @@
                     </view>
                     <navigationItem key="navigationItem" id="unW-tz-14e"/>
                     <connections>
+                        <outlet property="distanceLabel" destination="jaB-iM-eOE" id="HrM-xc-SrS"/>
                         <outlet property="mapView" destination="GoZ-R7-qBN" id="920-k7-2qd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x4o-Wn-BcH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4607" y="832"/>
+            <point key="canvasLocation" x="4606.8702290076335" y="831.69014084507046"/>
         </scene>
     </scenes>
     <resources>
