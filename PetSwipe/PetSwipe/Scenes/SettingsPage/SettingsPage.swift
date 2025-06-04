@@ -110,7 +110,25 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if pickerView == minAgePicker || pickerView == maxAgePicker {
+        if pickerView == minAgePicker {
+            let minAge = ageOptions[row]
+
+            let maxSelectedAge = ageOptions[maxAgePicker.selectedRow(inComponent: 0)]
+            if maxSelectedAge <= minAge {
+                if let nextValidIndex = ageOptions.firstIndex(where: { $0 > minAge }) {
+                    maxAgePicker.selectRow(nextValidIndex, inComponent: 0, animated: true)
+                }
+            }
+            updateAgeRangeLabel()
+
+        } else if pickerView == maxAgePicker {
+            let maxAge = ageOptions[row]
+            let minSelectedAge = ageOptions[minAgePicker.selectedRow(inComponent: 0)]
+            if maxAge <= minSelectedAge {
+                if let previousValidIndex = ageOptions.lastIndex(where: { $0 < maxAge }) {
+                    minAgePicker.selectRow(previousValidIndex, inComponent: 0, animated: true)
+                }
+            }
             updateAgeRangeLabel()
         }
     }
