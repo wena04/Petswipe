@@ -16,21 +16,17 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
     // MARK: - IBOutlets
     @IBOutlet weak var distanceSlider: UISlider!
     @IBOutlet weak var distanceLabel: UILabel!
-    
     @IBOutlet weak var ageLabel: UILabel!
     @IBOutlet weak var minAgePicker: UIPickerView!
     @IBOutlet weak var maxAgePicker: UIPickerView!
-    
-    @IBOutlet weak var breedDropdownField: UITextField!
     @IBOutlet weak var breedLabel: UILabel!
 
-    var selectedBreed: String? = nil
-    let breedPicker = UIPickerView()
-    
     // MARK: - Data
+    var selectedBreeds = Set<String>()
     let ageOptions = Array(1...20)
     var allBreeds: [String] = []
     
+    // MARK: - Firebase fetching
     func fetchBreedsFromPets() {
         let db = Firestore.firestore()
 
@@ -49,6 +45,11 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
 
             self.allBreeds = ["Every Pets"] + Array(breedSet).sorted()
             print("All breeds loaded:", self.allBreeds)
+
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+
         }
     }
     
@@ -72,12 +73,6 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
         
         fetchBreedsFromPets()
         
-        breedPicker.delegate = self
-        breedPicker.dataSource = self
-        breedDropdownField.inputView = breedPicker
-        breedDropdownField.isHidden = true
-        
-        self.view.addSubview(breedDropdownField)
         
     }
 
@@ -113,6 +108,12 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        if pickerView == minAgePicker || pickerView == maxAgePicker {
+            updateAgeRangeLabel()
+        }
+    }
 
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if pickerView == minAgePicker || pickerView == maxAgePicker {
@@ -130,21 +131,6 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
         }
     }
 
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if pickerView == minAgePicker || pickerView == maxAgePicker {
-            updateAgeRangeLabel()
-        } else {
-            let breed = allBreeds[row]
-            selectedBreed = (breed == "Every Pets") ? nil : breed
-            updateBreedPreference(breed: selectedBreed)
-            updateBreedLabel()
-            breedDropdownField.resignFirstResponder()
-        }
-    }
-    
-    func updateBreedLabel() {
-        breedLabel.text = selectedBreed ?? "Every Pets"
-    }
 
     func updateAgeRangeLabel() {
         let minAge = ageOptions[minAgePicker.selectedRow(inComponent: 0)]
@@ -173,31 +159,60 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
     }
     
     
-    func updateBreedPreference(breed: String?) {
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 0 && indexPath.row == 2 {
+            if allBreeds.isEmpty {
+                print("Breeds not loaded yet.")
+                return
+            }
+            performSegue(withIdentifier: "BreedSelectionSegue", sender: nil)
+        }
+    }
+    
+    func updateBreedLabel() {
+        if selectedBreeds.isEmpty {
+            breedLabel.text = "Every Pets"
+        } else {
+            breedLabel.text = selectedBreeds.joined(separator: ", ")
+        }
+    }
+
+    func updateBreedPreference() {
         let userId = Auth.auth().currentUser?.uid ?? "yourTestUserID"
         let db = Firestore.firestore()
 
-        var updateData: [String: Any]
-        if let breed = breed {
-            updateData = ["preferences.breed": breed]
-        } else {
-            updateData = ["preferences.breed": FieldValue.delete()]
+        var breedMap: [String: Bool] = [:]
+        for breed in allBreeds {
+            if breed == "Every Pets" { continue } 
+            breedMap[breed] = selectedBreeds.contains(breed)
         }
 
-        db.collection("users").document(userId).updateData(updateData) { error in
+        db.collection("users").document(userId).updateData([
+            "preferences.breeds": breedMap
+        ]) { error in
             if let error = error {
-                print("Failed to update breed preference: \(error)")
+                print("Failed to update breed map:", error)
             } else {
-                print("Breed preference updated:", breed ?? "All Pets")
+                print("Breed map updated:", breedMap)
             }
         }
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 && indexPath.row == 2 {
-            breedDropdownField.becomeFirstResponder()
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "BreedSelectionSegue" {
+            if let vc = segue.destination as? BreedSelectionPage {
+                vc.allBreeds = self.allBreeds
+                vc.selectedBreeds = self.selectedBreeds
+                vc.onSelectionDone = { [weak self] selected in
+                    self?.selectedBreeds = selected
+                    self?.updateBreedLabel()
+                    self?.updateBreedPreference()
+                }
+            }
         }
     }
+
 }
 
 

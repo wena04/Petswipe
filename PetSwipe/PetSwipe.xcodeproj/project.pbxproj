@@ -10,7 +10,6 @@
 		1633E6982DED88E000FBA07A /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 1529F9002DE8A1200082CA8F /* FirebaseAuth */; };
 		1633E6DF2DED8AA700FBA07A /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1633E6DE2DED8AA700FBA07A /* FirebaseCore */; };
 		1633E6E12DED8AA700FBA07A /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 1633E6E02DED8AA700FBA07A /* FirebaseFirestore */; };
-		16EAEE752DE5CCF800D47BBA /* pet_test.json in Resources */ = {isa = PBXBuildFile; fileRef = 16EAEE742DE5CCF800D47BBA /* pet_test.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
