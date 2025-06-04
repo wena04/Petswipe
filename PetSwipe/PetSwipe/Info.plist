@@ -11,12 +11,16 @@
 			<key>UIWindowSceneSessionRoleApplication</key>
 			<array>
 				<dict>
+					<key>UISceneStoryboardFile</key>
+					<string>Main</string>
+					<key>NSLocationWhenInUseUsageDescription
+</key>
+					<string>This app uses your location to show distance to pet shelters.
+</string>
 					<key>UISceneConfigurationName</key>
 					<string>Default Configuration</string>
 					<key>UISceneDelegateClassName</key>
 					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
-					<key>UISceneStoryboardFile</key>
-					<string>Main</string>
 				</dict>
 			</array>
 		</dict>
