@@ -46,12 +46,24 @@ class MatchesPage: UIViewController, UITableViewDelegate, UITableViewDataSource 
     
 // MARK: fetch from the firebase and populate
     
-    func fetchPetsFromFirestore() {
-        let db = Firestore.firestore()
+    func fetchLikedPetsFromFirestore() {
+        FirebaseManager.shared.fetchLikedPets { [weak self] result in
+            switch result {
+            case .success(let likedPetIds):
+                self?.fetchPetsByIDs(likedPetIds: likedPetIds)
+            case .failure(let error):
+                print("❌ Failed to fetch liked pets: \(error)")
+            }
+        }
+    }
+    
 
+    func fetchPetsByIDs(likedPetIds: [String]) {
+        let db = Firestore.firestore()
+        
         db.collection("pets").getDocuments { [weak self] snapshot, error in
             guard let self = self else { return }
-
+            
             if let error = error {
                 print("❌ Error fetching pets: \(error.localizedDescription)")
                 return
@@ -62,14 +74,17 @@ class MatchesPage: UIViewController, UITableViewDelegate, UITableViewDataSource 
                 return
             }
 
+            // ✅ Filter by liked pet IDs
+            let filteredDocuments = documents.filter { likedPetIds.contains($0.documentID) }
+
             var fetchedPets: [matchesPet] = []
             let dispatchGroup = DispatchGroup()
 
-            for document in documents {
+            for document in filteredDocuments {
                 do {
                     let pet = try document.data(as: FirestorePet.self)
                     dispatchGroup.enter()
-                    loadImage(from: pet.petPicture) { image in
+                    self.loadImage(from: pet.petPicture) { image in
                         let convertedPet = matchesPet(
                             id: document.documentID,
                             name: pet.petName,
@@ -116,7 +131,7 @@ class MatchesPage: UIViewController, UITableViewDelegate, UITableViewDataSource 
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        fetchPetsFromFirestore()
+        fetchLikedPetsFromFirestore()
     }
     
     
@@ -125,7 +140,7 @@ class MatchesPage: UIViewController, UITableViewDelegate, UITableViewDataSource 
         MatchesTableView.delegate = self
         MatchesTableView.dataSource = self
         initializeFirebaseIfNeeded()
-        fetchPetsFromFirestore()
+        fetchLikedPetsFromFirestore()
         // Do any additional setup after loading the view.
     }
     
