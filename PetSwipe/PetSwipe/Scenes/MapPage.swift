@@ -22,9 +22,14 @@ class MapPage: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         mapView.delegate = self
+        mapView.isZoomEnabled = true
+        mapView.isScrollEnabled = true
+        mapView.isRotateEnabled = true
+        mapView.isPitchEnabled = true
+        
         setupLocationServices()
         addCenterButton()
-
+        addZoomOutButton()
         // Do any additional setup after loading the view.
     }
     
@@ -37,82 +42,91 @@ class MapPage: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
         mapView.showsUserLocation = true
         mapView.userTrackingMode = .follow
     }
-
-    
-//    func setupMap() {
-//        
-//        guard let pet = pet else {
-//                   fatalError("No pet provided")
-//               }
-//        
-//        shelterLocation = CLLocationCoordinate2D(latitude: pet.location[0], longitude: pet.location[1])
-//        let region = MKCoordinateRegion(
-//        center: shelterLocation,
-//        latitudinalMeters: 1000, 
-//        longitudinalMeters: 1000
-//        )
-//        mapView.setRegion(region, animated: true)
-//
-//        let annotation = MKPointAnnotation()
-//        annotation.coordinate = shelterLocation
-//        annotation.title = "Local Animal Shelter"
-//        annotation.subtitle = "Find your new best friend here!"
-//        mapView.addAnnotation(annotation)
-//    }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-            switch manager.authorizationStatus {
-            case .authorizedWhenInUse, .authorizedAlways:
-                print("✅ Location access granted")
-                locationManager.startUpdatingLocation()
-            case .denied:
-                print("❌ Location access denied")
-            case .notDetermined:
-                print("🕐 Location permission not yet granted")
-            case .restricted:
-                print("🔒 Location access restricted")
-            @unknown default:
-                break
-            }
+        switch manager.authorizationStatus {
+        case .authorizedWhenInUse, .authorizedAlways:
+            locationManager.startUpdatingLocation()
+        case .denied, .restricted, .notDetermined:
+            break
+        @unknown default:
+            break
+        }
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.first else { return }
+        userLocation = location
+
+        if let pet = pet {
+            shelterLocation = CLLocationCoordinate2D(latitude: pet.location[0], longitude: pet.location[1])
         }
 
-        func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-            print("📍 Received user location: \(locations.first?.coordinate ?? CLLocationCoordinate2D())")
+        // Update distance
+        let shelterLoc = CLLocation(latitude: shelterLocation.latitude, longitude: shelterLocation.longitude)
+        let distanceInMeters = location.distance(from: shelterLoc)
+        let distanceInMiles = distanceInMeters * 0.000621371
+        distanceLabel.text = String(format: "Distance to shelter: %.2f miles", distanceInMiles)
 
-            guard let location = locations.first else { return }
-            userLocation = location
+        // Add annotation
+        mapView.removeAnnotations(mapView.annotations)
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = shelterLocation
+        annotation.title = "Local Animal Shelter"
+        mapView.addAnnotation(annotation)
 
-            if let pet = pet {
-                shelterLocation = CLLocationCoordinate2D(latitude: pet.location[0], longitude: pet.location[1])
+        // Draw route using MKDirections
+        drawRoute(from: location.coordinate, to: shelterLocation)
+    }
+    
+    func drawRoute(from start: CLLocationCoordinate2D, to end: CLLocationCoordinate2D) {
+        mapView.removeOverlays(mapView.overlays)
+
+        let request = MKDirections.Request()
+        request.source = MKMapItem(placemark: MKPlacemark(coordinate: start))
+        request.destination = MKMapItem(placemark: MKPlacemark(coordinate: end))
+        request.transportType = .automobile  // Change to .walking or .transit if needed
+
+        let directions = MKDirections(request: request)
+        directions.calculate { response, error in
+            if let route = response?.routes.first {
+                self.mapView.addOverlay(route.polyline)
+                self.mapView.setVisibleMapRect(
+                    route.polyline.boundingMapRect,
+                    edgePadding: UIEdgeInsets(top: 80, left: 40, bottom: 80, right: 40),
+                    animated: true
+                )
+
+                // 👇 Update label to include transport type and time
+                let transportLabel = self.labelForTransportType(request.transportType)
+                let distanceMiles = route.distance * 0.000621371
+                let timeMinutes = route.expectedTravelTime / 60.0
+
+                DispatchQueue.main.async {
+                    self.distanceLabel.text = String(
+                        format: "%@ • %.2f miles • %.0f min",
+                        transportLabel,
+                        distanceMiles,
+                        timeMinutes
+                    )
+                }
             }
-
-            // Update distance label
-            let shelterLoc = CLLocation(latitude: shelterLocation.latitude, longitude: shelterLocation.longitude)
-            let distanceInMeters = location.distance(from: shelterLoc)
-            let distanceInMiles = distanceInMeters * 0.000621371
-            distanceLabel.text = String(format: "Distance to shelter: %.2f miles", distanceInMiles)
-
-            // Add shelter annotation
-            mapView.removeAnnotations(mapView.annotations)
-            let annotation = MKPointAnnotation()
-            annotation.coordinate = shelterLocation
-            annotation.title = "Local Animal Shelter"
-            mapView.addAnnotation(annotation)
-
-            // Draw route
-            mapView.removeOverlays(mapView.overlays)
-            let coords = [location.coordinate, shelterLocation]
-            let polyline = MKPolyline(coordinates: coords, count: coords.count)
-            mapView.addOverlay(polyline)
-
-            // Show both points on map
-            let rect = polyline.boundingMapRect
-            mapView.setVisibleMapRect(rect, edgePadding: UIEdgeInsets(top: 80, left: 40, bottom: 80, right: 40), animated: true)
         }
+    }
 
-        func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
-            if let polyline = overlay as? MKPolyline {
-                let renderer = MKPolylineRenderer(polyline: polyline)
+    func labelForTransportType(_ type: MKDirectionsTransportType) -> String {
+        switch type {
+        case .automobile: return "🚗 Driving"
+        case .walking: return "🚶 Walking"
+        case .transit: return "🚌 Transit"
+        default: return "❓ Unknown"
+        }
+    }
+
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+            if let route = overlay as? MKPolyline {
+                let renderer = MKPolylineRenderer(polyline: route)
                 renderer.strokeColor = .systemBlue
                 renderer.lineWidth = 4
                 return renderer
@@ -124,42 +138,48 @@ class MapPage: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
             print("❗️Failed to get location: \(error.localizedDescription)")
         }
 
-        func addCenterButton() {
-            let centerButton = UIButton(type: .system)
-            centerButton.setImage(UIImage(systemName: "location.fill"), for: .normal)
-            centerButton.tintColor = .systemBlue
-            centerButton.backgroundColor = .systemBackground
-            centerButton.layer.cornerRadius = 25
-            centerButton.layer.shadowColor = UIColor.black.cgColor
-            centerButton.layer.shadowOpacity = 0.2
-            centerButton.layer.shadowOffset = CGSize(width: 0, height: 1)
-            centerButton.layer.shadowRadius = 2
-            centerButton.translatesAutoresizingMaskIntoConstraints = false
-            centerButton.addTarget(self, action: #selector(centerOnUserLocation), for: .touchUpInside)
-
-            view.addSubview(centerButton)
-
-            NSLayoutConstraint.activate([
-                centerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-                centerButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-                centerButton.widthAnchor.constraint(equalToConstant: 50),
-                centerButton.heightAnchor.constraint(equalToConstant: 50)
-            ])
-        }
-
         @objc func centerOnUserLocation() {
             guard let userCoordinate = userLocation?.coordinate else { return }
             let region = MKCoordinateRegion(center: userCoordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
             mapView.setRegion(region, animated: true)
         }
-    }
-    
-    /*
-    // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        @objc func fitMapToRoute() {
+            guard let userLocation = userLocation else { return }
+            drawRoute(from: userLocation.coordinate, to: shelterLocation)
+        }
+
+        func addCenterButton() {
+            let button = UIButton(type: .system)
+            button.setImage(UIImage(systemName: "location.fill"), for: .normal)
+            button.tintColor = .systemBlue
+            button.backgroundColor = .systemBackground
+            button.layer.cornerRadius = 25
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.addTarget(self, action: #selector(centerOnUserLocation), for: .touchUpInside)
+            view.addSubview(button)
+            NSLayoutConstraint.activate([
+                button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+                button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+                button.widthAnchor.constraint(equalToConstant: 50),
+                button.heightAnchor.constraint(equalToConstant: 50)
+            ])
+        }
+
+        func addZoomOutButton() {
+            let button = UIButton(type: .system)
+            button.setImage(UIImage(systemName: "arrow.up.left.and.arrow.down.right"), for: .normal)
+            button.tintColor = .systemBlue
+            button.backgroundColor = .systemBackground
+            button.layer.cornerRadius = 25
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.addTarget(self, action: #selector(fitMapToRoute), for: .touchUpInside)
+            view.addSubview(button)
+            NSLayoutConstraint.activate([
+                button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+                button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -80),
+                button.widthAnchor.constraint(equalToConstant: 50),
+                button.heightAnchor.constraint(equalToConstant: 50)
+            ])
+        }
     }
-    */
