@@ -424,6 +424,8 @@
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="ageLabel" destination="655-ol-mmI" id="mCb-8A-cra"/>
+                        <outlet property="breedDropdownField" destination="a85-OA-qWP" id="aXP-id-0Yg"/>
+                        <outlet property="breedLabel" destination="aab-WX-Ajb" id="ntD-Lt-GK7"/>
                         <outlet property="distanceLabel" destination="WAf-hk-WDv" id="kkS-7T-WfN"/>
                         <outlet property="distanceSlider" destination="kGR-HO-i6G" id="goH-Yn-maw"/>
                         <outlet property="maxAgePicker" destination="5CD-Ud-V1h" id="hR3-6L-RcI"/>
@@ -431,6 +433,12 @@
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Okz-Ic-HXV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <textField hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" id="a85-OA-qWP">
+                    <rect key="frame" x="0.0" y="0.0" width="97" height="34"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textField>
             </objects>
             <point key="canvasLocation" x="-11" y="832"/>
         </scene>
