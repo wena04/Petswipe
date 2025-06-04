@@ -37,22 +37,30 @@ class BreedSelectionPage: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "BreedCell") ?? UITableViewCell(style: .default, reuseIdentifier: "BreedCell")
         let breed = allBreeds[indexPath.row]
         cell.textLabel?.text = breed
-        cell.accessoryType = selectedBreeds.contains(breed) ? .checkmark : .none
+
+        if selectedBreeds.contains(breed) {
+            cell.accessoryType = .checkmark
+            tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
+        } else {
+            cell.accessoryType = .none
+        }
+
         return cell
     }
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let breed = allBreeds[indexPath.row]
-
-        if selectedBreeds.contains(breed) {
-            selectedBreeds.remove(breed)
-        } else {
-            selectedBreeds.insert(breed)
-        }
-
-        tableView.reloadRows(at: [indexPath], with: .automatic)
-
+        selectedBreeds.insert(breed)
+        tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
         onSelectionDone?(selectedBreeds)
     }
+    
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        let breed = allBreeds[indexPath.row]
+        selectedBreeds.remove(breed)
+        tableView.cellForRow(at: indexPath)?.accessoryType = .none
+        onSelectionDone?(selectedBreeds)
+    }
+
 
 }
