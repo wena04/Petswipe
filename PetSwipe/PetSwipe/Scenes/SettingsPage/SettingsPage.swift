@@ -70,10 +70,7 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
         // Default distance
         distanceSlider.value = 50
         updateDistanceLabel()
-        
         fetchBreedsFromPets()
-        
-        
     }
 
     // MARK: - Slider Action
@@ -175,8 +172,6 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
             }
         }
     }
-    
-    
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 && indexPath.row == 2 {

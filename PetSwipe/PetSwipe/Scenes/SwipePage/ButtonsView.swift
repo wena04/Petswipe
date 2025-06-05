@@ -40,7 +40,10 @@ class ButtonsView: SwipeBaseView {
         return b
     }()
     
-    lazy var container: UIStackView = {
+    lazy var refreshButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Refresh", for: .normal)
+        button.setTitleColor(.systemBlue, for: .normal)
         let c = UIStackView(arrangedSubviews: [likeButton, passButton])
         c.translatesAutoresizingMaskIntoConstraints = false
         c.spacing = 30

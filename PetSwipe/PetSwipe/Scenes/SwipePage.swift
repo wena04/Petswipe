@@ -27,13 +27,14 @@ class SwipePage: UIViewController {
         buttonsContainer.onPass = { [weak self] in
             self?.passPet()
         }
+        
+        buttonsContainer.onRefresh = { [weak self] in
+            self?.refreshPets()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        loadUserPreferences()
-        loadPetsFromFirebase()
     }
     
     private func setupLocationServices() {
@@ -221,6 +222,15 @@ class SwipePage: UIViewController {
         petCard.nameLabel.text = "No more recommended 🐶"
         petCard.workLabel.text = ""
         petCard.profileImageView.image = nil
+    }
+    
+    func refreshPets() {
+        print("Refreshing pets based on current preferences...")
+
+        currentIndex = 0
+
+        loadUserPreferences()
+        loadPetsFromFirebase()
     }
 }
 
