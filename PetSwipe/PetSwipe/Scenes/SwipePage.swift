@@ -47,7 +47,7 @@ class SwipePage: UIViewController {
         }
     }
     
-    func loadUserPreferences() {
+    func loadUserPreferences(completion: (() -> Void)? = nil) {
         FirebaseManager.shared.fetchUserPreferences { [weak self] result in
             switch result {
             case .success(let preferences):
@@ -56,6 +56,7 @@ class SwipePage: UIViewController {
             case .failure(let error):
                 print("Failed to load user preferences: \(error)")
             }
+            completion?()
         }
     }
     
@@ -228,8 +229,9 @@ class SwipePage: UIViewController {
 
         currentIndex = 0
 
-        loadUserPreferences()
-        loadPetsFromFirebase()
+        loadUserPreferences { [weak self] in
+            self?.loadPetsFromFirebase()
+        }
     }
 }
 
