@@ -31,8 +31,11 @@ class ProfilePage: UIViewController {
         backButton.layer.cornerRadius = 10
         backButton.layer.masksToBounds = true
 
-        if let user = Auth.auth().currentUser {
-            loadUserData(for: user)
+        do {
+            try Auth.auth().signOut()
+            print("Existing session cleared; authentication required")
+        } catch {
+            print("Error signing out: \(error)")
         }
     }
     
@@ -81,20 +84,13 @@ class ProfilePage: UIViewController {
                     return
                 }
 
-                if let user = Auth.auth().currentUser {
-                    // Already signed in, proceed
-                    performSegue(withIdentifier: "toMain", sender: self)
-                } else {
-                    // Try to sign in
-                    Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
-                        if let error = error {
-                            // If failed, try sign-up
-                            print("Sign in failed: \(error.localizedDescription)")
-                            self?.signUp(email: email, password: password)
-                        } else {
-                            print("Signed in successfully")
-                            self?.performSegue(withIdentifier: "toMain", sender: self)
-                        }
+                Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
+                    if let error = error {
+                        print("Sign in failed: \(error.localizedDescription)")
+                        self?.signUp(email: email, password: password)
+                    } else {
+                        print("Signed in successfully")
+                        self?.performSegue(withIdentifier: "toMain", sender: self)
                     }
                 }
             }

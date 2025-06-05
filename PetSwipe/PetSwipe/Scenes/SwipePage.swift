@@ -72,7 +72,6 @@ class SwipePage: UIViewController {
                     }
                     return "unknown"
                 }
-                print("Pet ages shown: \(ages)")
                 print("Pet distances: \(distances)")
                 
                 self?.pets = petModels.map { model in

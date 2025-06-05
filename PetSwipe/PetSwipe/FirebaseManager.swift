@@ -43,6 +43,7 @@ class FirebaseManager {
     }
 
     func getCurrentUser() -> User? {
+        print("Current user: \(Auth.auth().currentUser?.uid ?? "No user")")
         return Auth.auth().currentUser
     }
 
