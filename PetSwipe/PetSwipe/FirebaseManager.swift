@@ -75,7 +75,15 @@ class FirebaseManager {
             
             let ageRange = preferencesData["ageRange"] as? [Int] ?? [1, 10]
             let distance = preferencesData["distance"] as? Int ?? 50
-            let breeds = preferencesData["breeds"] as? [String] ?? []
+
+            let breeds: [String]
+            if let breedArray = preferencesData["breeds"] as? [String] {
+                breeds = breedArray
+            } else if let breedDict = preferencesData["breeds"] as? [String: Bool] {
+                breeds = breedDict.compactMap { key, value in value ? key : nil }
+            } else {
+                breeds = []
+            }
             
             let preferences = UserPreferences(ageRange: ageRange, distance: distance, breeds: breeds)
             completion(.success(preferences))
@@ -128,7 +136,16 @@ class FirebaseManager {
                     switch petsResult {
                     case .success(let allPets):
                         let filteredPets = allPets.filter { pet in
-                            return pet.petAge >= preferences.minAge && pet.petAge <= preferences.maxAge
+                            let ageMatch = pet.petAge >= preferences.minAge && pet.petAge <= preferences.maxAge
+                            
+                            let breedMatch: Bool
+                            if preferences.breeds.isEmpty || preferences.breeds.contains("Every Pets") {
+                                breedMatch = true
+                            } else {
+                                breedMatch = preferences.breeds.contains(pet.petBreed)
+                            }
+                            
+                            return ageMatch && breedMatch
                         }
                         completion(.success(filteredPets))
                     case .failure(let error):
@@ -172,16 +189,20 @@ class FirebaseManager {
                         let distanceInMiles = distanceInMeters * 0.000621371
                         distanceMatch = distanceInMiles <= Double(preferences.distance)
                         
-                        print("\(pet.petName): Age \(pet.petAge), Distance: \(String(format: "%.1f", distanceInMiles))mi (max: \(preferences.distance)mi)")
+                        print("\(pet.petName): Age \(pet.petAge), Distance: \(String(format: "%.1f", distanceInMiles))mi (max: \(preferences.distance)mi), Breed: \(pet.petBreed)")
                     } else {
                         distanceMatch = true
-                        print("\(pet.petName): Age \(pet.petAge), No location available for distance filtering")
+                    }
+    
+                    let breedMatch: Bool
+                    if preferences.breeds.isEmpty || preferences.breeds.contains("Every Pets") {
+                        breedMatch = true
+                    } else {
+                        breedMatch = preferences.breeds.contains(pet.petBreed)
                     }
                     
-                    return ageMatch && distanceMatch
+                    return ageMatch && distanceMatch && breedMatch
                 }
-                
-                print("Filtered pets: \(filteredPets.count)/\(allPets.count) match criteria")
                 completion(.success(filteredPets))
             case .failure(let error):
                 completion(.failure(error))

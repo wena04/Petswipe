@@ -52,7 +52,7 @@ class SwipePage: UIViewController {
             switch result {
             case .success(let preferences):
                 self?.userPreferences = preferences
-                print("User preferences loaded: Age range \(preferences.minAge)-\(preferences.maxAge), Distance: \(preferences.distance)mi")
+                print("User preferences loaded: Age range \(preferences.minAge)-\(preferences.maxAge), Distance: \(preferences.distance)mi, Breeds: \(preferences.breeds)")
             case .failure(let error):
                 print("Failed to load user preferences: \(error)")
             }
@@ -73,7 +73,6 @@ class SwipePage: UIViewController {
                     }
                     return "unknown"
                 }
-                print("Pet distances: \(distances)")
                 
                 self?.pets = petModels.map { model in
                     model.toMatchesPet(with: UIImage(named: "placeholder_pet") ?? UIImage())
@@ -120,7 +119,7 @@ class SwipePage: UIViewController {
     
     func showNoMatchingPetsMessage() {
         petCard.nameLabel.text = "No pets match your preferences"
-        petCard.workLabel.text = "Try adjusting your settings or distance preferences"
+        petCard.workLabel.text = "Try adjusting your age, distance, or breed preferences"
         petCard.profileImageView.image = UIImage(systemName: "heart.slash")
     }
 

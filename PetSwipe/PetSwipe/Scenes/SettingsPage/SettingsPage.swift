@@ -27,6 +27,44 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
     var allBreeds: [String] = []
     
     // MARK: - Firebase fetching
+    func loadUserPreferences() {
+        FirebaseManager.shared.fetchUserPreferences { [weak self] result in
+            switch result {
+            case .success(let preferences):
+                DispatchQueue.main.async {
+                    if let minIndex = self?.ageOptions.firstIndex(of: preferences.minAge) {
+                        self?.minAgePicker.selectRow(minIndex, inComponent: 0, animated: false)
+                    }
+                    if let maxIndex = self?.ageOptions.firstIndex(of: preferences.maxAge) {
+                        self?.maxAgePicker.selectRow(maxIndex, inComponent: 0, animated: false)
+                    }
+                    self?.updateAgeRangeLabel()
+                    
+                    self?.distanceSlider.value = Float(preferences.distance)
+                    self?.updateDistanceLabel()
+                    
+                    self?.selectedBreeds = Set(preferences.breeds)
+                    self?.updateBreedLabel()
+                    
+                    print("Loaded user preferences: Age \(preferences.minAge)-\(preferences.maxAge), Distance: \(preferences.distance)mi, Breeds: \(preferences.breeds)")
+                }
+            case .failure(let error):
+                print("Failed to load user preferences: \(error)")
+                DispatchQueue.main.async {
+                    self?.minAgePicker.selectRow(2, inComponent: 0, animated: false)
+                    self?.maxAgePicker.selectRow(4, inComponent: 0, animated: false)
+                    self?.updateAgeRangeLabel()
+                    
+                    self?.distanceSlider.value = 50
+                    self?.updateDistanceLabel()
+                    
+                    self?.selectedBreeds = Set<String>()
+                    self?.updateBreedLabel()
+                }
+            }
+        }
+    }
+    
     func fetchBreedsFromPets() {
         let db = Firestore.firestore()
 
@@ -61,15 +99,8 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
         minAgePicker.delegate = self
         maxAgePicker.dataSource = self
         maxAgePicker.delegate = self
-        
-        // Default age range
-        minAgePicker.selectRow(2, inComponent: 0, animated: false) // 3
-        maxAgePicker.selectRow(4, inComponent: 0, animated: false) // 5
-        updateAgeRangeLabel()
-        
-        // Default distance
-        distanceSlider.value = 50
-        updateDistanceLabel()
+
+        loadUserPreferences()
         fetchBreedsFromPets()
     }
 
