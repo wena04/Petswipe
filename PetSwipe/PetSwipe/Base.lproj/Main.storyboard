@@ -324,7 +324,7 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100" minValue="50" maxValue="1000" translatesAutoresizingMaskIntoConstraints="NO" id="kGR-HO-i6G">
+                                                <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="100" minValue="0.0" maxValue="6000" translatesAutoresizingMaskIntoConstraints="NO" id="kGR-HO-i6G">
                                                     <rect key="frame" x="18" y="39.333333333333336" width="357" height="31.333333333333336"/>
                                                     <connections>
                                                         <action selector="distanceSliderChanged:" destination="FJD-of-8Bj" eventType="valueChanged" id="jQX-Ga-Bdf"/>
@@ -505,8 +505,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Distance to shelter: -- miles" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jaB-iM-eOE" customClass="distanceLabel">
+                                <rect key="frame" x="50" y="95" width="295" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GoZ-R7-qBN" customClass="Map">
-                                <rect key="frame" x="0.0" y="118" width="393" height="609"/>
+                                <rect key="frame" x="-21" y="124" width="436" height="660"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <standardMapConfiguration key="preferredConfiguration"/>
                             </mapView>
@@ -516,12 +523,13 @@
                     </view>
                     <navigationItem key="navigationItem" id="unW-tz-14e"/>
                     <connections>
+                        <outlet property="distanceLabel" destination="jaB-iM-eOE" id="HrM-xc-SrS"/>
                         <outlet property="mapView" destination="GoZ-R7-qBN" id="920-k7-2qd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x4o-Wn-BcH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4607" y="832"/>
+            <point key="canvasLocation" x="4606.8702290076335" y="831.69014084507046"/>
         </scene>
     </scenes>
     <resources>

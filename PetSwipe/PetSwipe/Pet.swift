@@ -47,3 +47,23 @@ struct PetModel: Codable {
         )
     }
 }
+
+struct UserPreferences {
+    let ageRange: [Int]
+    let distance: Int
+    let breeds: [String]
+    
+    init(ageRange: [Int] = [1, 10], distance: Int = 50, breeds: [String] = []) {
+        self.ageRange = ageRange
+        self.distance = distance
+        self.breeds = breeds
+    }
+    
+    var minAge: Int {
+        return ageRange.first ?? 1
+    }
+    
+    var maxAge: Int {
+        return ageRange.last ?? 10
+    }
+}

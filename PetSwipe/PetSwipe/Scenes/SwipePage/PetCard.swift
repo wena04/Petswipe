@@ -86,4 +86,14 @@ class PetCard: SwipeBaseView {
         workLabel.text = "\(pet.breed), Age: \(pet.age)"
         profileImageView.image = pet.image
     }
+    
+    func configure(with pet: matchesPet, distance: String?) {
+        nameLabel.text = pet.name
+        if let distance = distance {
+            workLabel.text = "\(pet.breed), Age: \(pet.age) • \(distance)"
+        } else {
+            workLabel.text = "\(pet.breed), Age: \(pet.age)"
+        }
+        profileImageView.image = pet.image
+    }
 }
