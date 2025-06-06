@@ -20,6 +20,8 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
     @IBOutlet weak var minAgePicker: UIPickerView!
     @IBOutlet weak var maxAgePicker: UIPickerView!
     @IBOutlet weak var breedLabel: UILabel!
+    @IBOutlet weak var userNameLabel: UILabel!
+    @IBOutlet weak var userEmailLabel: UILabel!
 
     // MARK: - Data
     var selectedBreeds = Set<String>()
@@ -45,8 +47,6 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
                     
                     self?.selectedBreeds = Set(preferences.breeds)
                     self?.updateBreedLabel()
-                    
-                    print("Loaded user preferences: Age \(preferences.minAge)-\(preferences.maxAge), Distance: \(preferences.distance)mi, Breeds: \(preferences.breeds)")
                 }
             case .failure(let error):
                 print("Failed to load user preferences: \(error)")
@@ -61,6 +61,34 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
                     self?.selectedBreeds = Set<String>()
                     self?.updateBreedLabel()
                 }
+            }
+        }
+    }
+    
+    func loadUserInfo() {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            print("No user logged in")
+            return
+        }
+        
+        let db = Firestore.firestore()
+        db.collection("users").document(userId).getDocument { document, error in
+            if let document = document, document.exists {
+                let data = document.data()
+                let name = data?["name"] as? String ?? "Unknown"
+                let email = data?["email"] as? String ?? "Unknown"
+                
+                print("Loaded user info from Firestore:")
+                print("name =", name)
+                print("email =", email)
+                
+                DispatchQueue.main.async {
+                    self.userNameLabel.text = name
+                    self.userEmailLabel.text = email
+                }
+                
+            } else {
+                print("Failed to load user info: \(error?.localizedDescription ?? "unknown error")")
             }
         }
     }
@@ -99,9 +127,11 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
         minAgePicker.delegate = self
         maxAgePicker.dataSource = self
         maxAgePicker.delegate = self
-
+        
+        loadUserInfo()
         loadUserPreferences()
         fetchBreedsFromPets()
+
     }
 
     // MARK: - Slider Action
@@ -256,7 +286,9 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
             }
         }
     }
+    
+
+
 
 }
-
 
