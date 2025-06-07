@@ -241,21 +241,36 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
     
     // MARK: - Breed
     func updateBreedLabel() {
-        if selectedBreeds.isEmpty {
+        if selectedBreeds.isEmpty || selectedBreeds.contains("Every Pets") {
             breedLabel.text = "Every Pets"
         } else {
-            breedLabel.text = selectedBreeds.joined(separator: ", ")
+            let selected = Array(selectedBreeds)
+            let displayCount = min(3, selected.count)
+            let displayBreeds = selected.prefix(displayCount)
+
+            if selected.count > 3 {
+                breedLabel.text = displayBreeds.joined(separator: ", ") + ", ..."
+            } else {
+                breedLabel.text = displayBreeds.joined(separator: ", ")
+            }
         }
     }
-
     func updateBreedPreference() {
         let userId = Auth.auth().currentUser?.uid ?? "yourTestUserID"
         let db = Firestore.firestore()
 
         var breedMap: [String: Bool] = [:]
+
+        let isEveryPetsSelected = selectedBreeds.contains("Every Pets")
+
         for breed in allBreeds {
-            if breed == "Every Pets" { continue } 
-            breedMap[breed] = selectedBreeds.contains(breed)
+            if breed == "Every Pets" { continue }
+
+            if isEveryPetsSelected {
+                breedMap[breed] = true
+            } else {
+                breedMap[breed] = selectedBreeds.contains(breed)
+            }
         }
 
         db.collection("users").document(userId).updateData([
