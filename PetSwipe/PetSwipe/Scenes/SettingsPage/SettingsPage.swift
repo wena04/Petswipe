@@ -28,7 +28,58 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
     let ageOptions = Array(1...20)
     var allBreeds: [String] = []
     
+    // MARK: - View
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupPickerViews()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.loadUserInfo()
+            self.loadUserPreferences()
+        }
+        
+        fetchBreedsFromPets() 
+    }
+    
+    private func setupPickerViews() {
+        minAgePicker.dataSource = self
+        minAgePicker.delegate = self
+        maxAgePicker.dataSource = self
+        maxAgePicker.delegate = self
+    }
+    
+    
     // MARK: - Firebase fetching
+    func loadUserInfo() {
+        guard let userId = Auth.auth().currentUser?.uid else {
+            print("No user logged in")
+            return
+        }
+        
+        let db = Firestore.firestore()
+        db.collection("users").document(userId).getDocument { document, error in
+            if let document = document, document.exists {
+                let data = document.data()
+                let name = data?["name"] as? String ?? "Unknown"
+                let email = data?["email"] as? String ?? "Unknown"
+                
+                print("Loaded user info from Firestore:")
+                print("name =", name)
+                print("email =", email)
+                
+                DispatchQueue.main.async {
+                    self.userNameLabel.text = name
+                    self.userEmailLabel.text = email
+                }
+                
+            } else {
+                print("Failed to load user info: \(error?.localizedDescription ?? "unknown error")")
+            }
+        }
+    }
+    
+    
     func loadUserPreferences() {
         FirebaseManager.shared.fetchUserPreferences { [weak self] result in
             switch result {
@@ -65,34 +116,6 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
         }
     }
     
-    func loadUserInfo() {
-        guard let userId = Auth.auth().currentUser?.uid else {
-            print("No user logged in")
-            return
-        }
-        
-        let db = Firestore.firestore()
-        db.collection("users").document(userId).getDocument { document, error in
-            if let document = document, document.exists {
-                let data = document.data()
-                let name = data?["name"] as? String ?? "Unknown"
-                let email = data?["email"] as? String ?? "Unknown"
-                
-                print("Loaded user info from Firestore:")
-                print("name =", name)
-                print("email =", email)
-                
-                DispatchQueue.main.async {
-                    self.userNameLabel.text = name
-                    self.userEmailLabel.text = email
-                }
-                
-            } else {
-                print("Failed to load user info: \(error?.localizedDescription ?? "unknown error")")
-            }
-        }
-    }
-    
     func fetchBreedsFromPets() {
         let db = Firestore.firestore()
 
@@ -119,22 +142,8 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        // PickerView setup
-        minAgePicker.dataSource = self
-        minAgePicker.delegate = self
-        maxAgePicker.dataSource = self
-        maxAgePicker.delegate = self
-        
-        loadUserInfo()
-        loadUserPreferences()
-        fetchBreedsFromPets()
 
-    }
-
-    // MARK: - Slider Action
+    // MARK: - Distance Slider
     @IBAction func distanceSliderChanged(_ sender: UISlider) {
         updateDistanceLabel()
         let distance = Int(sender.value)
@@ -162,7 +171,6 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
     }
 
     // MARK: - PickerView
-    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
@@ -207,7 +215,7 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
         }
     }
 
-
+    // MARK: - Age Range
     func updateAgeRangeLabel() {
         let minAge = ageOptions[minAgePicker.selectedRow(inComponent: 0)]
         let maxAge = ageOptions[maxAgePicker.selectedRow(inComponent: 0)]
@@ -234,32 +242,38 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
         }
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 && indexPath.row == 2 {
-            if allBreeds.isEmpty {
-                print("Breeds not loaded yet.")
-                return
-            }
-            performSegue(withIdentifier: "BreedSelectionSegue", sender: nil)
-        }
-    }
-    
+    // MARK: - Breed
     func updateBreedLabel() {
-        if selectedBreeds.isEmpty {
+        if selectedBreeds.isEmpty || selectedBreeds.contains("Every Pets") {
             breedLabel.text = "Every Pets"
         } else {
-            breedLabel.text = selectedBreeds.joined(separator: ", ")
+            let selected = Array(selectedBreeds)
+            let displayCount = min(3, selected.count)
+            let displayBreeds = selected.prefix(displayCount)
+
+            if selected.count > 3 {
+                breedLabel.text = displayBreeds.joined(separator: ", ") + ", ..."
+            } else {
+                breedLabel.text = displayBreeds.joined(separator: ", ")
+            }
         }
     }
-
     func updateBreedPreference() {
         let userId = Auth.auth().currentUser?.uid ?? "yourTestUserID"
         let db = Firestore.firestore()
 
         var breedMap: [String: Bool] = [:]
+
+        let isEveryPetsSelected = selectedBreeds.contains("Every Pets")
+
         for breed in allBreeds {
-            if breed == "Every Pets" { continue } 
-            breedMap[breed] = selectedBreeds.contains(breed)
+            if breed == "Every Pets" { continue }
+
+            if isEveryPetsSelected {
+                breedMap[breed] = true
+            } else {
+                breedMap[breed] = selectedBreeds.contains(breed)
+            }
         }
 
         db.collection("users").document(userId).updateData([
@@ -270,6 +284,22 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
             } else {
                 print("Breed map updated:", breedMap)
             }
+        }
+    }
+    // MARK: - Nav to
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 0 && indexPath.row == 2 {
+            if allBreeds.isEmpty {
+                print("Breeds not loaded yet.")
+                return
+            }
+            performSegue(withIdentifier: "BreedSelectionSegue", sender: nil)
+        }
+        else if indexPath.section == 0 && indexPath.row == 5 {
+            handleSignOut()
+        }
+        else if indexPath.section == 0 && indexPath.row == 1 {
+            openAppSettings()
         }
     }
     
@@ -287,8 +317,48 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
         }
     }
     
+    // MARK: - Signout
+    func handleSignOut() {
+        let alert = UIAlertController(title: "Sign Out",
+                                      message: "Are you sure you want to sign out?",
+                                      preferredStyle: .alert)
 
+        let signOutAction = UIAlertAction(title: "Sign Out", style: .destructive) { _ in
+            do {
+                try Auth.auth().signOut()
+                print("User signed out")
 
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let delegate = windowScene.delegate as? UIWindowSceneDelegate,
+                   let window = delegate.window as? UIWindow {
+                    window.rootViewController = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
+                    window.makeKeyAndVisible()
+                }
 
+            } catch {
+                print("Failed to sign out: \(error)")
+            }
+        }
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+
+        alert.addAction(signOutAction)
+        alert.addAction(cancelAction)
+
+        present(alert, animated: true, completion: nil)
+    }
+    
+    //MARK: - Setting
+    func openAppSettings() {
+        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
+
+        if UIApplication.shared.canOpenURL(settingsUrl) {
+            UIApplication.shared.open(settingsUrl) { success in
+                print("Opened Settings: \(success)")
+            }
+        }
+    }
 }
 
