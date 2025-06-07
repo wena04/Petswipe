@@ -33,10 +33,13 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
         super.viewDidLoad()
         
         setupPickerViews()
-        loadUserInfo()
-        loadUserPreferences()
-        fetchBreedsFromPets()
 
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.loadUserInfo()
+            self.loadUserPreferences()
+        }
+        
+        fetchBreedsFromPets() 
     }
     
     private func setupPickerViews() {
