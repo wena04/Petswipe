@@ -280,6 +280,9 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
         else if indexPath.section == 0 && indexPath.row == 5 {
             handleSignOut()
         }
+        else if indexPath.section == 0 && indexPath.row == 1 {
+            openAppSettings()
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -326,8 +329,18 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
 
         present(alert, animated: true, completion: nil)
     }
+    
+    //MARK: - Setting
+    func openAppSettings() {
+        guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+            return
+        }
 
-
-
+        if UIApplication.shared.canOpenURL(settingsUrl) {
+            UIApplication.shared.open(settingsUrl) { success in
+                print("Opened Settings: \(success)")
+            }
+        }
+    }
 }
 
