@@ -298,20 +298,33 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
     
     // MARK: - Signout
     func handleSignOut() {
-        do {
-            try Auth.auth().signOut()
-            print("User signed out")
+        let alert = UIAlertController(title: "Sign Out",
+                                      message: "Are you sure you want to sign out?",
+                                      preferredStyle: .alert)
 
-            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-               let delegate = windowScene.delegate as? UIWindowSceneDelegate,
-               let window = delegate.window as? UIWindow {
-                window.rootViewController = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
-                window.makeKeyAndVisible()
+        let signOutAction = UIAlertAction(title: "Sign Out", style: .destructive) { _ in
+            do {
+                try Auth.auth().signOut()
+                print("User signed out")
+
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let delegate = windowScene.delegate as? UIWindowSceneDelegate,
+                   let window = delegate.window as? UIWindow {
+                    window.rootViewController = UIStoryboard(name: "Main", bundle: nil).instantiateInitialViewController()
+                    window.makeKeyAndVisible()
+                }
+
+            } catch {
+                print("Failed to sign out: \(error)")
             }
-
-        } catch {
-            print("Failed to sign out: \(error)")
         }
+
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+
+        alert.addAction(signOutAction)
+        alert.addAction(cancelAction)
+
+        present(alert, animated: true, completion: nil)
     }
 
 
