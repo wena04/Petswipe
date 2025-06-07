@@ -163,14 +163,19 @@ class FirebaseManager {
         if let preferences = userPreferences {
             performLocationFiltering(with: preferences, userLocation: userLocation, completion: completion)
         } else {
-            fetchUserPreferences { [weak self] result in
-                switch result {
-                case .success(let preferences):
-                    self?.performLocationFiltering(with: preferences, userLocation: userLocation, completion: completion)
-                case .failure(let error):
-                    print("Could not fetch user preferences, showing all pets: \(error)")
-                    self?.fetchPets(completion: completion)
+            if getCurrentUser() != nil {
+                fetchUserPreferences { [weak self] result in
+                    switch result {
+                    case .success(let preferences):
+                        self?.performLocationFiltering(with: preferences, userLocation: userLocation, completion: completion)
+                    case .failure(let error):
+                        print("Could not fetch user preferences, showing all pets: \(error)")
+                        self?.fetchPets(completion: completion)
+                    }
                 }
+            } else {
+                print("User not logged in, showing all pets without filtering")
+                fetchPets(completion: completion)
             }
         }
     }
