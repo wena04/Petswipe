@@ -192,7 +192,29 @@ class SwipePage: UIViewController {
             print("No more pets to pass")
             return 
         }
-        print("Passed on pet: \(pets[currentIndex].name)")
+        
+        let currentPet = pets[currentIndex]
+        
+        FirebaseManager.shared.fetchLikedPets { [weak self] result in
+            switch result {
+            case .success(let likedPetIds):
+                if likedPetIds.contains(currentPet.id) {
+                    FirebaseManager.shared.removeLikedPet(petId: currentPet.id) { error in
+                        if let error = error {
+                            print("Failed to remove liked pet: \(error)")
+                        } else {
+                            print("Successfully removed \(currentPet.name) from liked pets")
+                        }
+                    }
+                } else {
+                    print("Passed on pet: \(currentPet.name)")
+                }
+            case .failure(let error):
+                print("Failed to check liked pets: \(error)")
+                print("Passed on pet: \(currentPet.name)")
+            }
+        }
+        
         goToNextPet()
     }
     

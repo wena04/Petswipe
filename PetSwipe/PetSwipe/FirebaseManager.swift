@@ -128,6 +128,33 @@ class FirebaseManager {
         }
     }
     
+    private func applyUserPreferencesFilter(to pets: [PetModel], with preferences: UserPreferences, userLocation: CLLocation? = nil) -> [PetModel] {
+        return pets.filter { pet in
+            let ageMatch = pet.petAge >= preferences.minAge && pet.petAge <= preferences.maxAge
+            
+            let breedMatch: Bool
+            if preferences.breeds.isEmpty || preferences.breeds.contains("Every Pets") {
+                breedMatch = true
+            } else {
+                breedMatch = preferences.breeds.contains(pet.petBreed)
+            }
+            
+            let distanceMatch: Bool
+            if let userLoc = userLocation {
+                let petLocation = CLLocation(latitude: pet.petLocation.latitude, longitude: pet.petLocation.longitude)
+                let distanceInMeters = userLoc.distance(from: petLocation)
+                let distanceInMiles = distanceInMeters * 0.000621371
+                distanceMatch = distanceInMiles <= Double(preferences.distance)
+                
+                print("\(pet.petName): Age \(pet.petAge), Distance: \(String(format: "%.1f", distanceInMiles))mi (max: \(preferences.distance)mi), Breed: \(pet.petBreed)")
+            } else {
+                distanceMatch = true
+            }
+            
+            return ageMatch && breedMatch && distanceMatch
+        }
+    }
+    
     func fetchFilteredPets(completion: @escaping (Result<[PetModel], Error>) -> Void) {
         fetchUserPreferences { [weak self] result in
             switch result {
@@ -135,18 +162,7 @@ class FirebaseManager {
                 self?.fetchPets { petsResult in
                     switch petsResult {
                     case .success(let allPets):
-                        let filteredPets = allPets.filter { pet in
-                            let ageMatch = pet.petAge >= preferences.minAge && pet.petAge <= preferences.maxAge
-                            
-                            let breedMatch: Bool
-                            if preferences.breeds.isEmpty || preferences.breeds.contains("Every Pets") {
-                                breedMatch = true
-                            } else {
-                                breedMatch = preferences.breeds.contains(pet.petBreed)
-                            }
-                            
-                            return ageMatch && breedMatch
-                        }
+                        let filteredPets = self?.applyUserPreferencesFilter(to: allPets, with: preferences) ?? []
                         completion(.success(filteredPets))
                     case .failure(let error):
                         completion(.failure(error))
@@ -181,33 +197,10 @@ class FirebaseManager {
     }
     
     private func performLocationFiltering(with preferences: UserPreferences, userLocation: CLLocation?, completion: @escaping (Result<[PetModel], Error>) -> Void) {
-        fetchPets { petsResult in
+        fetchPets { [weak self] petsResult in
             switch petsResult {
             case .success(let allPets):
-                let filteredPets = allPets.filter { pet in
-                    let ageMatch = pet.petAge >= preferences.minAge && pet.petAge <= preferences.maxAge
-                    
-                    let distanceMatch: Bool
-                    if let userLoc = userLocation {
-                        let petLocation = CLLocation(latitude: pet.petLocation.latitude, longitude: pet.petLocation.longitude)
-                        let distanceInMeters = userLoc.distance(from: petLocation)
-                        let distanceInMiles = distanceInMeters * 0.000621371
-                        distanceMatch = distanceInMiles <= Double(preferences.distance)
-                        
-                        print("\(pet.petName): Age \(pet.petAge), Distance: \(String(format: "%.1f", distanceInMiles))mi (max: \(preferences.distance)mi), Breed: \(pet.petBreed)")
-                    } else {
-                        distanceMatch = true
-                    }
-    
-                    let breedMatch: Bool
-                    if preferences.breeds.isEmpty || preferences.breeds.contains("Every Pets") {
-                        breedMatch = true
-                    } else {
-                        breedMatch = preferences.breeds.contains(pet.petBreed)
-                    }
-                    
-                    return ageMatch && distanceMatch && breedMatch
-                }
+                let filteredPets = self?.applyUserPreferencesFilter(to: allPets, with: preferences, userLocation: userLocation) ?? []
                 completion(.success(filteredPets))
             case .failure(let error):
                 completion(.failure(error))
