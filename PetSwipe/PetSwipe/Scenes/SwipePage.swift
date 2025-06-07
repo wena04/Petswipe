@@ -154,15 +154,17 @@ class SwipePage: UIViewController {
         view.addSubview(buttonsContainer)
         
         NSLayoutConstraint.activate([
-            petCard.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            petCard.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.85),
-            petCard.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            petCard.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.70),
-            
-            buttonsContainer.topAnchor.constraint(equalTo: petCard.bottomAnchor, constant: 50),
-            buttonsContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            buttonsContainer.widthAnchor.constraint(equalTo: petCard.widthAnchor),
-            buttonsContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
+            petCard.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
+            petCard.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            petCard.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            petCard.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.7)
+        ])
+
+        NSLayoutConstraint.activate([
+            buttonsContainer.topAnchor.constraint(equalTo: petCard.bottomAnchor, constant: 24),
+            buttonsContainer.leadingAnchor.constraint(equalTo: petCard.leadingAnchor),
+            buttonsContainer.trailingAnchor.constraint(equalTo: petCard.trailingAnchor),
+            buttonsContainer.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
         ])
     }
     
@@ -209,9 +211,9 @@ class SwipePage: UIViewController {
             let isLeftSwipe = translation.x < -50 || velocity.x < -500
             
             if isRightSwipe {
-                passPet()
-            } else if isLeftSwipe {
                 likePet()
+            } else if isLeftSwipe {
+                passPet()
             } else {
                 goToNextPet()
             }

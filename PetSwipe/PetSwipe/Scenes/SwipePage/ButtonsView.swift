@@ -50,9 +50,9 @@ class ButtonsView: SwipeBaseView {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
+
     lazy var mainButtonsContainer: UIStackView = {
-        let c = UIStackView(arrangedSubviews: [likeButton, passButton])
+        let c = UIStackView(arrangedSubviews: [passButton, likeButton])
         c.translatesAutoresizingMaskIntoConstraints = false
         c.spacing = 60
         c.distribution = .equalSpacing
