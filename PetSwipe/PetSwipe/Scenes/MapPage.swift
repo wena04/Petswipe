@@ -72,8 +72,8 @@ class MapPage: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
             mapView.removeAnnotations(mapView.annotations)
             let annotation = MKPointAnnotation()
             annotation.coordinate = shelterLocation
-            annotation.title = pet?.name // Show pet’s name
-            annotation.subtitle = "Tap for more info"
+            annotation.title = "Shelter"
+            annotation.subtitle = "Tap for shelter info"
             mapView.addAnnotation(annotation)
 
             // Draw route using MKDirections
@@ -179,14 +179,14 @@ class MapPage: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
                 annotationView?.canShowCallout = true
                 annotationView?.markerTintColor = .systemBlue
 
-                // Thumbnail image
-                if let petImage = pet?.image {
-                    let imageView = UIImageView(image: petImage)
-                    imageView.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
-                    imageView.layer.cornerRadius = 5
-                    imageView.clipsToBounds = true
-                    annotationView?.leftCalloutAccessoryView = imageView
-                }
+//                // Thumbnail image
+//                if let petImage = pet?.image {
+//                    let imageView = UIImageView(image: petImage)
+//                    imageView.frame = CGRect(x: 0, y: 0, width: 50, height: 50)
+//                    imageView.layer.cornerRadius = 5
+//                    imageView.clipsToBounds = true
+//                    annotationView?.leftCalloutAccessoryView = imageView
+//                }
 
                 // Info button
                 let infoButton = UIButton(type: .detailDisclosure)
@@ -202,8 +202,8 @@ class MapPage: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
             if control == annotationView.rightCalloutAccessoryView {
                 // Push to info page (or show alert)
                 let alert = UIAlertController(
-                    title: pet?.name ?? "Pet Info",
-                    message: "Breed: \(pet?.breed ?? "Unknown")\nAge: \(pet?.age ?? 0)",
+                    title: "Shelter Info",
+                    message: "Location: \(shelterLocation.latitude), \(shelterLocation.longitude)\nContact: example@shelter.org",
                     preferredStyle: .alert
                 )
                 alert.addAction(UIAlertAction(title: "OK", style: .default))
