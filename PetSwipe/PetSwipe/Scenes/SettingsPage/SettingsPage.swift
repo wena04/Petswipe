@@ -156,7 +156,10 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
     }
     
     func updateDistanceInFirestore(_ distance: Int) {
-        let userId = Auth.auth().currentUser?.uid ?? "yourTestUserID"
+        guard let userId = Auth.auth().currentUser?.uid else {
+            print("No current user")
+            return
+        }
         let db = Firestore.firestore()
         
         db.collection("users").document(userId).updateData([
@@ -228,7 +231,10 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
     }
     
     func updateAgeRangeInFirestore(min: Int, max: Int) {
-        let userId = Auth.auth().currentUser?.uid ?? "yourTestUserID"
+        guard let userId = Auth.auth().currentUser?.uid else {
+            print("No current user, skip update")
+            return
+        }
         let db = Firestore.firestore()
         
         db.collection("users").document(userId).updateData([
@@ -259,7 +265,10 @@ class SettingsPage: UITableViewController, UIPickerViewDelegate, UIPickerViewDat
         }
     }
     func updateBreedPreference() {
-        let userId = Auth.auth().currentUser?.uid ?? "yourTestUserID"
+        guard let userId = Auth.auth().currentUser?.uid else {
+            print("No current user, skip update")
+            return
+        }
         let db = Firestore.firestore()
 
         var breedMap: [String: Bool] = [:]

@@ -4,6 +4,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Map view configurations" minToolsVersion="14.0"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -143,7 +144,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="7nB-zI-3zP">
             <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="N90-5f-vul" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="MainTabBarController" automaticallyAdjustsScrollViewInsets="NO" id="N90-5f-vul" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="NXl-DA-MLj">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
@@ -186,6 +187,7 @@
                                     <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </buttonConfiguration>
                                 <connections>
+                                    <action selector="startButtonTapped:" destination="PTG-Fe-os6" eventType="touchUpInside" id="2pq-Vp-aN9"/>
                                     <segue destination="WfM-vS-KnM" kind="presentation" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="xcB-DW-eXC"/>
                                 </connections>
                             </button>
@@ -194,6 +196,9 @@
                         <color key="backgroundColor" red="1" green="0.98478045023224958" blue="0.99240262455132111" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <color key="tintColor" red="0.96213080409999996" green="0.97298258540000004" blue="0.88887508569999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                     </view>
+                    <connections>
+                        <outlet property="startButton" destination="DlQ-68-DmB" id="95A-Te-zdR"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="REg-9b-RP5" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -202,61 +207,85 @@
         <!--Profile Page-->
         <scene sceneID="Dx4-J0-RE8">
             <objects>
-                <viewController id="WfM-vS-KnM" customClass="ProfilePage" customModule="PetSwipe" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProfilePage" id="WfM-vS-KnM" customClass="ProfilePage" customModule="PetSwipe" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="6I6-1h-svy">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pCb-Ga-VSp">
-                                <rect key="frame" x="157" y="597" width="79" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.96213080409999996" green="0.97298258540000004" blue="0.88887508569999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <color key="tintColor" red="0.96213080409999996" green="0.97298258540000004" blue="0.88887508569999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Next" cornerStyle="medium">
-                                    <fontDescription key="titleFontDescription" name=".SFNS-Regular" family=".AppleSystemUIFont" pointSize="20"/>
-                                    <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="nextButtonTapped:" destination="WfM-vS-KnM" eventType="primaryActionTriggered" id="0NI-LN-lQi"/>
-                                    <segue destination="N90-5f-vul" kind="presentation" identifier="toMain" modalPresentationStyle="fullScreen" id="oAe-gA-nPq"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VI4-AN-47V">
-                                <rect key="frame" x="157" y="676" width="79" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.96213080409999996" green="0.97298258540000004" blue="0.88887508569999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <color key="tintColor" red="0.96213080409999996" green="0.97298258540000004" blue="0.88887508569999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Back" cornerStyle="medium">
-                                    <fontDescription key="titleFontDescription" name=".SFNS-Regular" family=".AppleSystemUIFont" pointSize="20"/>
-                                    <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                </buttonConfiguration>
-                                <connections>
-                                    <segue destination="PTG-Fe-os6" kind="presentation" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="N8T-xV-RtX"/>
-                                </connections>
-                            </button>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CEc-2I-dPh">
-                                <rect key="frame" x="98" y="210" width="196" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Xoo-2V-s68" userLabel="Password Field">
-                                <rect key="frame" x="98" y="472" width="196" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XGw-Sm-Urt">
-                                <rect key="frame" x="98" y="341" width="196" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PetSwipe" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KtF-cw-Tap">
+                                <rect key="frame" x="122.66666666666667" y="169" width="147.66666666666663" height="43.333333333333343"/>
+                                <fontDescription key="fontDescription" name=".SFNS-Regular" family=".SF NS" pointSize="39"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="FoY-Ce-uLl">
+                                <rect key="frame" x="40" y="298.66666666666669" width="313" height="255.00000000000006"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Username" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CEc-2I-dPh">
+                                        <rect key="frame" x="0.0" y="0.0" width="313" height="34"/>
+                                        <color key="backgroundColor" systemColor="systemGray6Color"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="next"/>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="XGw-Sm-Urt">
+                                        <rect key="frame" x="0.0" y="46" width="313" height="34"/>
+                                        <color key="backgroundColor" systemColor="systemGray6Color"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="next"/>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Password" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Xoo-2V-s68" userLabel="Password Field">
+                                        <rect key="frame" x="0.0" y="92" width="313" height="34"/>
+                                        <color key="backgroundColor" systemColor="systemGray6Color"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <textInputTraits key="textInputTraits" returnKeyType="done" secureTextEntry="YES"/>
+                                    </textField>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please use a real Email" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Mq-rs-EdY">
+                                        <rect key="frame" x="0.0" y="138" width="313" height="20.333333333333343"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" name="WidgetBackground"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pCb-Ga-VSp">
+                                        <rect key="frame" x="0.0" y="170.33333333333331" width="313" height="36.333333333333343"/>
+                                        <color key="backgroundColor" red="0.96213080409999996" green="0.97298258540000004" blue="0.88887508569999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <color key="tintColor" red="0.96213080409999996" green="0.97298258540000004" blue="0.88887508569999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Next" cornerStyle="medium">
+                                            <fontDescription key="titleFontDescription" name=".SFNS-Regular" family=".AppleSystemUIFont" pointSize="20"/>
+                                            <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <action selector="nextButtonTapped:" destination="WfM-vS-KnM" eventType="primaryActionTriggered" id="0NI-LN-lQi"/>
+                                            <segue destination="N90-5f-vul" kind="presentation" identifier="toMain" modalPresentationStyle="fullScreen" id="oAe-gA-nPq"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VI4-AN-47V">
+                                        <rect key="frame" x="0.0" y="218.66666666666669" width="313" height="36.333333333333343"/>
+                                        <color key="backgroundColor" red="0.96213080409999996" green="0.97298258540000004" blue="0.88887508569999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <color key="tintColor" red="0.96213080409999996" green="0.97298258540000004" blue="0.88887508569999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Back" cornerStyle="medium">
+                                            <fontDescription key="titleFontDescription" name=".SFNS-Regular" family=".AppleSystemUIFont" pointSize="20"/>
+                                            <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </buttonConfiguration>
+                                        <connections>
+                                            <segue destination="PTG-Fe-os6" kind="presentation" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="N8T-xV-RtX"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="85W-Yw-bkB"/>
                         <color key="backgroundColor" red="0.99607843159999998" green="0.98431372640000003" blue="0.99215686319999996" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                        <constraints>
+                            <constraint firstItem="KtF-cw-Tap" firstAttribute="top" secondItem="85W-Yw-bkB" secondAttribute="top" constant="110" id="7Uo-ef-PHI"/>
+                            <constraint firstItem="FoY-Ce-uLl" firstAttribute="centerX" secondItem="6I6-1h-svy" secondAttribute="centerX" id="ANW-6e-1PP"/>
+                            <constraint firstItem="FoY-Ce-uLl" firstAttribute="centerY" secondItem="6I6-1h-svy" secondAttribute="centerY" id="XHT-5m-NWT"/>
+                            <constraint firstItem="KtF-cw-Tap" firstAttribute="centerX" secondItem="6I6-1h-svy" secondAttribute="centerX" id="YLz-zx-3pP"/>
+                            <constraint firstItem="85W-Yw-bkB" firstAttribute="trailing" secondItem="FoY-Ce-uLl" secondAttribute="trailing" constant="40" id="YMD-3y-ScR"/>
+                            <constraint firstItem="FoY-Ce-uLl" firstAttribute="leading" secondItem="85W-Yw-bkB" secondAttribute="leading" constant="40" id="asZ-6D-Xe4"/>
+                            <constraint firstItem="KtF-cw-Tap" firstAttribute="centerX" secondItem="6I6-1h-svy" secondAttribute="centerX" id="w1I-9m-AYl"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="backButton" destination="VI4-AN-47V" id="xJt-Ce-Gve"/>
@@ -607,11 +636,17 @@
         <image name="checkmark.seal.fill" catalog="system" width="128" height="124"/>
         <image name="gearshape.fill" catalog="system" width="128" height="123"/>
         <image name="swatchpalette.fill" catalog="system" width="120" height="128"/>
+        <namedColor name="WidgetBackground">
+            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
+        <systemColor name="systemGray6Color">
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemPinkColor">
-            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

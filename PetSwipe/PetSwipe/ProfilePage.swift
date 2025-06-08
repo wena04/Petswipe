@@ -79,21 +79,64 @@ class ProfilePage: UIViewController {
         
     @IBAction func nextButtonTapped(_ sender: UIButton) {
         guard let email = emailField.text,
-              let password = passwordField.text,
-              !email.isEmpty, !password.isEmpty else {
-            print("Email or password missing")
-            return
-        }
+                  let password = passwordField.text,
+                  !email.isEmpty, !password.isEmpty else {
+                showAlert(title: "Missing Fields", message: "Please enter both email and password.")
+                return
+            }
 
-        Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
-            if let error = error {
-                print("Sign in failed: \(error.localizedDescription)")
-                self?.signUp(email: email, password: password)
-            } else {
-                print("Signed in successfully")
-                self?.proceedToMain()
+            if !isValidEmail(email) {
+                showAlert(title: "Invalid Email", message: "Please enter a valid email address.")
+                return
+            }
+
+            Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
+                if let error = error {
+                    print("Sign in failed: \(error.localizedDescription)")
+
+                    if let errorCode = AuthErrorCode(rawValue: error._code) {
+                        switch errorCode {
+                        case .wrongPassword:
+                            DispatchQueue.main.async {
+                                self?.showAlert(title: "Wrong Password", message: "Please try again.")
+                                self?.passwordField.text = ""
+                            }
+                        case .emailAlreadyInUse:
+                            DispatchQueue.main.async {
+                                self?.showAlert(title: "Email Already Registered", message: "Please log in.")
+                                self?.passwordField.text = ""
+                            }
+                        case .userNotFound:
+                            self?.signUp(email: email, password: password)
+                        default:
+                            DispatchQueue.main.async {
+                                self?.showAlert(title: "Login Error", message: error.localizedDescription)
+                                self?.passwordField.text = ""
+                            }
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self?.showAlert(title: "Error", message: error.localizedDescription)
+                            self?.passwordField.text = ""
+                        }
+                    }
+                } else {
+                    print("Signed in successfully")
+                    self?.proceedToMain()
+                }
             }
         }
+    
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
+
+    func isValidEmail(_ email: String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+        let emailPredicate = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailPredicate.evaluate(with: email)
     }
     
     func signUp(email: String, password: String) {
@@ -128,7 +171,7 @@ class ProfilePage: UIViewController {
     }
     
     func proceedToMain() {
-        guard let user = Auth.auth().currentUser else {
+        guard Auth.auth().currentUser != nil else {
             print("No current user in proceedToMain")
             return
         }
@@ -138,11 +181,14 @@ class ProfilePage: UIViewController {
                 print("Error refreshing token: \(error)")
             } else {
                 print("Token refreshed, ready to proceed")
-                self?.loadUserData(for: user) {
-                    print("DEBUG: loadUserData completed, now performSegue")
 
-                    DispatchQueue.main.async {
-                        self?.performSegue(withIdentifier: "toMain", sender: self)
+                DispatchQueue.main.async {
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    if let mainTabBarVC = storyboard.instantiateViewController(withIdentifier: "MainTabBarController") as? UITabBarController {
+                        mainTabBarVC.modalPresentationStyle = .fullScreen
+                        self?.present(mainTabBarVC, animated: true, completion: nil)
+                    } else {
+                        print("ERROR: Could not instantiate MainTabBarController")
                     }
                 }
             }
