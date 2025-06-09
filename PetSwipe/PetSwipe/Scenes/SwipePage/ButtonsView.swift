@@ -23,7 +23,7 @@ class ButtonsView: SwipeBaseView {
         ).new
         b.imageView?.contentMode = .scaleAspectFit
         b.imageView?.tintColor = .systemPink
-        b.imageView?.transform = CGAffineTransform(scaleX: 2.0, y: 2.0)
+        b.imageView?.transform = CGAffineTransform(scaleX: 3.2, y: 3.2)
         return b
     }()
 
@@ -37,7 +37,7 @@ class ButtonsView: SwipeBaseView {
         ).new
         b.imageView?.contentMode = .scaleAspectFit
         b.imageView?.tintColor = .systemGray
-        b.imageView?.transform = CGAffineTransform(scaleX: 2.0, y: 2.0)
+        b.imageView?.transform = CGAffineTransform(scaleX: 3.2, y: 3.2)
         return b
     }()
     
@@ -54,7 +54,7 @@ class ButtonsView: SwipeBaseView {
     lazy var mainButtonsContainer: UIStackView = {
         let c = UIStackView(arrangedSubviews: [passButton, likeButton])
         c.translatesAutoresizingMaskIntoConstraints = false
-        c.spacing = 60
+        c.spacing = 25
         c.distribution = .equalSpacing
         return c
     }()
@@ -78,10 +78,12 @@ class ButtonsView: SwipeBaseView {
             container.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
 
+        let buttonSize = min(UIScreen.main.bounds.width * 0.28, 130)
+        
         [likeButton, passButton].forEach { button in
             NSLayoutConstraint.activate([
-                button.widthAnchor.constraint(equalToConstant: 80),
-                button.heightAnchor.constraint(equalToConstant: 80)
+                button.widthAnchor.constraint(equalToConstant: buttonSize),
+                button.heightAnchor.constraint(equalToConstant: buttonSize)
             ])
         }
         
