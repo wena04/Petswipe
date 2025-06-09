@@ -10,7 +10,7 @@ import UIKit
 
 class PetCard: SwipeBaseView {
     let profileImageView = ImageViewFactory.standardImageView(
-        image: UIImage(named: "cat1") ?? UIImage(),
+        image: UIImage(named: "placeholder_pet") ?? UIImage(),
         cornerRadius: 0,
         interactionEnabled: true,
         contentMode: .scaleAspectFill,
@@ -40,8 +40,8 @@ class PetCard: SwipeBaseView {
         return v
     }()
     
-    let nameLabel = ElementStorage.standardLabel(text: "Jyn Erso", textColor: .gray, fontStyle: .headline, textAlignment: .left, sizeToFit: true, adjustToFit: true).new
-    let workLabel = ElementStorage.standardLabel(text: "Member of the Alliance to Restore the Republic", textColor: .gray, fontStyle: .subheadline, textAlignment: .left, sizeToFit: true, adjustToFit: true).new
+    let nameLabel = ElementStorage.standardLabel(text: "Loading pets ... 🐶", textColor: .gray, fontStyle: .headline, textAlignment: .left, sizeToFit: true, adjustToFit: true).new
+    let workLabel = ElementStorage.standardLabel(text: "", textColor: .gray, fontStyle: .subheadline, textAlignment: .left, sizeToFit: true, adjustToFit: true).new
     
     override func setUpViews() {
         addSubview(containerView)
