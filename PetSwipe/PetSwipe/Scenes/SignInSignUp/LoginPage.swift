@@ -42,28 +42,9 @@ class LoginPage: UIViewController {
                 if let error = error {
                     print("Sign in failed: \(error.localizedDescription)")
 
-                    if let errorCode = AuthErrorCode(rawValue: error._code) {
-                        switch errorCode {
-                        case .wrongPassword:
-                            DispatchQueue.main.async {
-                                self?.showAlert(title: "Wrong Password", message: "Please try again.")
-                                self?.passwordField.text = ""
-                            }
-                        case .userNotFound:
-                            DispatchQueue.main.async {
-                                self?.showAlert(title: "User Not Found", message: "Please check your email.")
-                            }
-                        default:
-                            DispatchQueue.main.async {
-                                self?.showAlert(title: "Login Error", message: error.localizedDescription)
-                                self?.passwordField.text = ""
-                            }
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                            self?.showAlert(title: "Login Error", message: error.localizedDescription)
-                            self?.passwordField.text = ""
-                        }
+                    DispatchQueue.main.async {
+                        self?.showAlert(title: "Invalid Info", message: "Please check your email and password.")
+                        self?.passwordField.text = ""
                     }
                 } else {
                     print("Signed in successfully")

@@ -51,7 +51,7 @@ class ProfilePage: UIViewController {
         guard let email = emailField.text,
               let password = passwordField.text,
               !email.isEmpty, !password.isEmpty else {
-            showAlert(title: "Missing Fields", message: "Please enter both email and password.")
+            showAlert(title: "Missing Information", message: "Please enter both email and password.")
             return
         }
         
@@ -60,11 +60,30 @@ class ProfilePage: UIViewController {
             return
         }
         
-        signUp(email: email, password: password)
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
+            if let error = error {
+                print("Sign in failed: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    self?.showAlert(title: "Invalid Info", message: "Please check your email and password.")
+                }
+            } else {
+                print("Signed in successfully")
+                self?.proceedToMain()
+            }
+        }
     }
-
     
     func showAlert(title: String, message: String) {
+        if let presentedVC = presentedViewController {
+            presentedVC.dismiss(animated: false) {
+                self.showNewAlert(title: title, message: message)
+            }
+        } else {
+            showNewAlert(title: title, message: message)
+        }
+    }
+    
+    private func showNewAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alert, animated: true, completion: nil)
@@ -100,7 +119,7 @@ class ProfilePage: UIViewController {
                     }
                 }
                 
-                return // Exit early on error
+                return
             }
             
             // success flow
@@ -151,6 +170,13 @@ class ProfilePage: UIViewController {
             self.dismiss(animated: true, completion: nil)
         }))
         present(alert, animated: true, completion: nil)
+    }
+    
+    override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
+        if identifier == "toMain" {
+            return false 
+        }
+        return true
     }
     
     // saves user info even if we leave profile screen
