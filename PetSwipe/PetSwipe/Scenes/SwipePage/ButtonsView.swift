@@ -54,7 +54,7 @@ class ButtonsView: SwipeBaseView {
     lazy var mainButtonsContainer: UIStackView = {
         let c = UIStackView(arrangedSubviews: [passButton, likeButton])
         c.translatesAutoresizingMaskIntoConstraints = false
-        c.spacing = 60
+        c.spacing = 25
         c.distribution = .equalSpacing
         return c
     }()
@@ -78,6 +78,8 @@ class ButtonsView: SwipeBaseView {
             container.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
 
+        let buttonSize = min(UIScreen.main.bounds.width * 0.28, 130)
+        
         [likeButton, passButton].forEach { button in
             NSLayoutConstraint.activate([
                 button.widthAnchor.constraint(equalToConstant: 100),

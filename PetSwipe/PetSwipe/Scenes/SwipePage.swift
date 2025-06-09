@@ -152,7 +152,7 @@ class SwipePage: UIViewController {
         ])
 
         NSLayoutConstraint.activate([
-            buttonsContainer.topAnchor.constraint(equalTo: petCard.bottomAnchor, constant: 24),
+            buttonsContainer.topAnchor.constraint(equalTo: petCard.bottomAnchor, constant: 16),
             buttonsContainer.leadingAnchor.constraint(equalTo: petCard.leadingAnchor),
             buttonsContainer.trailingAnchor.constraint(equalTo: petCard.trailingAnchor),
             buttonsContainer.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
