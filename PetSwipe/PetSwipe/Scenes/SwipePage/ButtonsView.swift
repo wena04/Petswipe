@@ -23,7 +23,7 @@ class ButtonsView: SwipeBaseView {
         ).new
         b.imageView?.contentMode = .scaleAspectFit
         b.imageView?.tintColor = .systemPink
-        b.imageView?.transform = CGAffineTransform(scaleX: 2.0, y: 2.0)
+        b.imageView?.transform = CGAffineTransform(scaleX: 4.0, y: 4.0)
         return b
     }()
 
@@ -37,14 +37,14 @@ class ButtonsView: SwipeBaseView {
         ).new
         b.imageView?.contentMode = .scaleAspectFit
         b.imageView?.tintColor = .systemGray
-        b.imageView?.transform = CGAffineTransform(scaleX: 2.0, y: 2.0)
+        b.imageView?.transform = CGAffineTransform(scaleX: 4.0, y: 4.0)
         return b
     }()
     
     lazy var refreshButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Refresh", for: .normal)
-        button.setTitleColor(.systemBlue, for: .normal)
+        button.setTitleColor(.systemPink, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         button.addTarget(self, action: #selector(refresh), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -80,8 +80,8 @@ class ButtonsView: SwipeBaseView {
 
         [likeButton, passButton].forEach { button in
             NSLayoutConstraint.activate([
-                button.widthAnchor.constraint(equalToConstant: 80),
-                button.heightAnchor.constraint(equalToConstant: 80)
+                button.widthAnchor.constraint(equalToConstant: 100),
+                button.heightAnchor.constraint(equalToConstant: 100)
             ])
         }
         
