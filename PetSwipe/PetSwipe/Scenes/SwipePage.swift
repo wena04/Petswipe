@@ -7,14 +7,14 @@ class SwipePage: UIViewController {
     var currentIndex: Int = 0
     var userPreferences: UserPreferences?
     var userLocation: CLLocation?
-    
+
     private let locationManager = CLLocationManager()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         view.backgroundColor = .white
-        
+
         setUpViews()
         setupLocationServices()
         loadUserPreferences()
@@ -27,26 +27,26 @@ class SwipePage: UIViewController {
         buttonsContainer.onPass = { [weak self] in
             self?.passPet()
         }
-        
+
         buttonsContainer.onRefresh = { [weak self] in
             self?.refreshPets()
         }
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
-    
+
     private func setupLocationServices() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
-            
+
         if CLLocationManager.locationServicesEnabled() {
             locationManager.startUpdatingLocation()
         }
     }
-    
+
     func loadUserPreferences(completion: (() -> Void)? = nil) {
         FirebaseManager.shared.fetchUserPreferences { [weak self] result in
             switch result {
@@ -59,50 +59,40 @@ class SwipePage: UIViewController {
             completion?()
         }
     }
-    
+
     func loadPetsFromFirebase() {
         FirebaseManager.shared.fetchPetsWithLocationFilter(userLocation: userLocation, userPreferences: userPreferences) { [weak self] result in
             switch result {
             case .success(let petModels):
-                
-                let ages = petModels.map { $0.petAge }
-                let distances = petModels.map { pet -> String in
-                    if let userLoc = self?.userLocation {
-                        let petLoc = CLLocation(latitude: pet.petLocation.latitude, longitude: pet.petLocation.longitude)
-                        let distanceInMiles = userLoc.distance(from: petLoc) * 0.000621371
-                        return String(format: "%.1fmi", distanceInMiles)
-                    }
-                    return "unknown"
-                }
-                
-                self?.pets = petModels.map { model in
-                    model.toMatchesPet(with: UIImage(named: "placeholder_pet") ?? UIImage())
-                }
-                
-                for (index, model) in petModels.enumerated() {
-                    FirebaseManager.shared.downloadImage(from: model.petPicture) { [weak self] image in
-                        if let image = image, let strongSelf = self, index < strongSelf.pets.count {
-                            strongSelf.pets[index].image = image
-                            if index == strongSelf.currentIndex && index < strongSelf.pets.count {
-                                DispatchQueue.main.async {
-                                    if strongSelf.currentIndex < strongSelf.pets.count {
-                                        strongSelf.petCard.configure(with: strongSelf.pets[strongSelf.currentIndex])
-                                    }
-                                }
-                            }
+                let dispatchGroup = DispatchGroup()
+                var tempPets: [matchesPet] = []
+
+                for model in petModels {
+                    dispatchGroup.enter()
+                    let placeholderImage = UIImage(named: "placeholder_pet") ?? UIImage()
+                    var pet = model.toMatchesPet(with: placeholderImage)
+
+                    FirebaseManager.shared.downloadImage(from: model.petPicture) { image in
+                        if let image = image {
+                            pet.image = image
                         }
+                        tempPets.append(pet)
+                        dispatchGroup.leave()
                     }
                 }
-                
-                DispatchQueue.main.async {
-                    self?.currentIndex = 0
-                    if let first = self?.pets.first, !petModels.isEmpty {
-                        self?.petCard.configure(with: first)
+
+                dispatchGroup.notify(queue: .main) { [weak self] in
+                    guard let self = self else { return }
+                    self.pets = tempPets
+                    self.currentIndex = 0
+
+                    if let first = self.pets.first {
+                        self.petCard.configure(with: first)
                     } else {
-                        self?.showNoMatchingPetsMessage()
+                        self.showNoMatchingPetsMessage()
                     }
                 }
-                
+
             case .failure(let error):
                 print("Error loading pets: \(error)")
                 DispatchQueue.main.async {
@@ -111,13 +101,13 @@ class SwipePage: UIViewController {
             }
         }
     }
-    
+
     func showError(message: String) {
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
-    
+
     func showNoMatchingPetsMessage() {
         petCard.nameLabel.text = "No pets match your preferences"
         petCard.workLabel.text = "Try adjusting your age, distance, or breed preferences"
@@ -129,18 +119,18 @@ class SwipePage: UIViewController {
         tc.addGestureRecognizer(UIPanGestureRecognizer(target: self, action: #selector(swipeCard(sender:))))
         return tc
     }()
-    
+
     let buttonsContainer: ButtonsView = {
         let c = ButtonsView()
         return c
     }()
-    
+
     func goToNextPet() {
         guard !pets.isEmpty else {
             showEndMessage()
             return
         }
-        
+
         currentIndex += 1
         if currentIndex < pets.count {
             petCard.configure(with: pets[currentIndex])
@@ -148,11 +138,11 @@ class SwipePage: UIViewController {
             showEndMessage()
         }
     }
-    
+
     func setUpViews() {
         view.addSubview(petCard)
         view.addSubview(buttonsContainer)
-        
+
         NSLayoutConstraint.activate([
             petCard.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
             petCard.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -167,12 +157,12 @@ class SwipePage: UIViewController {
             buttonsContainer.bottomAnchor.constraint(lessThanOrEqualTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
         ])
     }
-    
+
     func likePet() {
         guard currentIndex < pets.count else { return }
-        
+
         let likedPet = pets[currentIndex]
-        
+
         FirebaseManager.shared.addLikedPet(petId: likedPet.id) { [weak self] error in
             if let error = error {
                 print("Failed to save liked pet: \(error)")
@@ -183,18 +173,18 @@ class SwipePage: UIViewController {
                 print("Successfully liked pet: \(likedPet.name)")
             }
         }
-        
+
         goToNextPet()
     }
-    
+
     func passPet() {
-        guard currentIndex < pets.count else { 
+        guard currentIndex < pets.count else {
             print("No more pets to pass")
-            return 
+            return
         }
-        
+
         let currentPet = pets[currentIndex]
-        
+
         FirebaseManager.shared.fetchLikedPets { [weak self] result in
             switch result {
             case .success(let likedPetIds):
@@ -214,15 +204,15 @@ class SwipePage: UIViewController {
                 print("Passed on pet: \(currentPet.name)")
             }
         }
-        
+
         goToNextPet()
     }
-    
+
     @objc func swipeCard(sender: UIPanGestureRecognizer) {
         guard currentIndex < pets.count && !pets.isEmpty else {
             return
         }
-        
+
         sender.swipeView(petCard)
 
         if sender.state == .ended {
@@ -231,7 +221,7 @@ class SwipePage: UIViewController {
 
             let isRightSwipe = translation.x > 50 || velocity.x > 500
             let isLeftSwipe = translation.x < -50 || velocity.x < -500
-            
+
             if isRightSwipe {
                 likePet()
             } else if isLeftSwipe {
@@ -241,13 +231,13 @@ class SwipePage: UIViewController {
             }
         }
     }
-    
+
     func showEndMessage() {
         petCard.nameLabel.text = "No more recommended 🐶"
         petCard.workLabel.text = ""
         petCard.profileImageView.image = nil
     }
-    
+
     func refreshPets() {
         print("Refreshing pets based on current preferences...")
 
@@ -263,14 +253,14 @@ extension SwipePage: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.first else { return }
         userLocation = location
-        
+
         print("User location updated: \(location.coordinate.latitude), \(location.coordinate.longitude)")
-        
+
         loadPetsFromFirebase()
-        
+
         locationManager.stopUpdatingLocation()
     }
-    
+
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         switch manager.authorizationStatus {
         case .authorizedWhenInUse, .authorizedAlways:
@@ -284,7 +274,7 @@ extension SwipePage: CLLocationManagerDelegate {
             break
         }
     }
-    
+
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Failed to get location: \(error.localizedDescription)")
         loadPetsFromFirebase()

@@ -17,15 +17,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let windowScene = (scene as? UIWindowScene) else { return }
-        
-        window = UIWindow(windowScene: windowScene)
-        
+        guard (scene as? UIWindowScene) != nil else { return }
+
         NotificationCenter.default.addObserver(self, selector: #selector(handleLoginSuccess), name: .loginSucceeded, object: nil)
-
-        showInitialViewController()
-
-        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -56,23 +50,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
     
-    func showInitialViewController() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-
-        if let user = Auth.auth().currentUser {
-            print("SceneDelegate: User logged in, show MainTabBar")
-            let mainTabBarVC = storyboard.instantiateViewController(identifier: "MainTabBarController")
-            window?.rootViewController = mainTabBarVC
-        } else {
-            print("SceneDelegate: No user logged in, show ProfilePage")
-            let profileVC = storyboard.instantiateViewController(identifier: "ProfilePage")
-            window?.rootViewController = profileVC
-        }
-    }
-    
     @objc func handleLoginSuccess() {
         print("SceneDelegate: Received loginSucceeded, switching to MainTabBar")
-        showInitialViewController()
+
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let mainTabBarVC = storyboard.instantiateViewController(identifier: "MainTabBarController")
+        mainTabBarVC.modalPresentationStyle = .fullScreen
+
+        window?.rootViewController = mainTabBarVC
     }
 
     deinit {

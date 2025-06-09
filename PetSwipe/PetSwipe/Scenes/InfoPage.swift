@@ -14,7 +14,7 @@ class InfoPage: UIViewController {
     @IBOutlet weak var infoPageImage: UIImageView!
 
     @IBOutlet weak var infoPageLabel: UILabel!
-    
+
     @IBAction func handleFindPet(_ sender: Any) {
         let selectedPet = pet
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -25,21 +25,18 @@ class InfoPage: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+
         guard let pet = pet else {
-                    fatalError("The pet object should not be nil.")
-                }
-        
+            print("Error: Pet object is nil")
+            navigationController?.popViewController(animated: true)
+            return
+        }
+
         infoPageImage.image = pet.image
-        
-
-            infoPageLabel.text = "Meet \(pet.name)!\n\(pet.name) is a \(pet.breed), \(pet.age) years old. \n click the button below to adopt \(pet.name) as your new best friend!"
-    
-
-    
-        // Do any additional setup after loading the view.
+        infoPageLabel.text = "Meet \(pet.name)!\n\(pet.name) is a \(pet.breed), \(pet.age) years old. \n click the button below to adopt \(pet.name) as your new best friend!"
     }
-    
- 
+
+
 
 
     /*
