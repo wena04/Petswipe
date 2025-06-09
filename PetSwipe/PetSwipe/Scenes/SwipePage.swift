@@ -226,8 +226,6 @@ class SwipePage: UIViewController {
                 likePet()
             } else if isLeftSwipe {
                 passPet()
-            } else {
-                goToNextPet()
             }
         }
     }
