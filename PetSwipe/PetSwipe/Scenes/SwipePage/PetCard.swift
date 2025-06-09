@@ -16,14 +16,6 @@ class PetCard: SwipeBaseView {
         contentMode: .scaleAspectFill,
         sizeToFit: false
     ).new
-
-    let friendsIconView = ImageViewFactory.standardImageView(
-        image: UIImage(named: "friendsIcon") ?? UIImage(),
-        cornerRadius: 0,
-        interactionEnabled: false,
-        contentMode: .scaleAspectFill,
-        sizeToFit: false
-    ).new
     
     let containerView: SwipeBaseView = {
         let v = SwipeBaseView()
@@ -49,7 +41,6 @@ class PetCard: SwipeBaseView {
         containerView.addSubview(infoContainerView)
         infoContainerView.addSubview(nameLabel)
         infoContainerView.addSubview(workLabel)
-        infoContainerView.addSubview(friendsIconView)
             
         let infoContainerViewMargins = infoContainerView.layoutMarginsGuide
             
@@ -69,15 +60,11 @@ class PetCard: SwipeBaseView {
             infoContainerView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
             infoContainerView.widthAnchor.constraint(equalTo: containerView.widthAnchor),
                 
-            friendsIconView.centerYAnchor.constraint(equalTo: infoContainerViewMargins.centerYAnchor),
-            friendsIconView.heightAnchor.constraint(equalTo: infoContainerViewMargins.heightAnchor, multiplier: 0.7),
-            friendsIconView.widthAnchor.constraint(equalTo: friendsIconView.heightAnchor),
-            friendsIconView.trailingAnchor.constraint(equalTo: infoContainerViewMargins.trailingAnchor),
             nameLabel.leadingAnchor.constraint(equalTo: infoContainerViewMargins.leadingAnchor),
             nameLabel.topAnchor.constraint(equalTo: infoContainerViewMargins.topAnchor),
             workLabel.leadingAnchor.constraint(equalTo: infoContainerViewMargins.leadingAnchor),
             workLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor),
-            workLabel.trailingAnchor.constraint(equalTo: friendsIconView.leadingAnchor, constant: -20)
+            workLabel.trailingAnchor.constraint(equalTo: infoContainerViewMargins.trailingAnchor)
             ])
     }
     
