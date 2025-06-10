@@ -326,7 +326,6 @@
 				DEVELOPMENT_TEAM = QWYKBMRPX2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PetSwipe/Info.plist;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app uses location to show distance to pet shelters";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -353,10 +352,9 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = QWYKBMRPX2;
+				DEVELOPMENT_TEAM = 3Z5UKN2724;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PetSwipe/Info.plist;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app uses location to show distance to pet shelters";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -367,7 +365,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = INFO499.wena04.PetSwipe;
+				PRODUCT_BUNDLE_IDENTIFIER = INFO499.PetSwipe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

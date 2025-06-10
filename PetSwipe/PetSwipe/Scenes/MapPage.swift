@@ -161,7 +161,7 @@ class MapPage: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
                 view.addSubview(button)
                 NSLayoutConstraint.activate([
                     button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-                    button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+                    button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -40),
                     button.widthAnchor.constraint(equalToConstant: 50),
                     button.heightAnchor.constraint(equalToConstant: 50)
                 ])
@@ -224,7 +224,7 @@ class MapPage: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
                 view.addSubview(button)
                 NSLayoutConstraint.activate([
                     button.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
-                    button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -80),
+                    button.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100),
                     button.widthAnchor.constraint(equalToConstant: 50),
                     button.heightAnchor.constraint(equalToConstant: 50)
                 ])
