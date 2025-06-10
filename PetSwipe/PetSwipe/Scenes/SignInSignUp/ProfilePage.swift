@@ -60,17 +60,7 @@ class ProfilePage: UIViewController {
             return
         }
         
-        Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
-            if let error = error {
-                print("Sign in failed: \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    self?.showAlert(title: "Invalid Info", message: "Please check your email and password.")
-                }
-            } else {
-                print("Signed in successfully")
-                self?.proceedToMain()
-            }
-        }
+        signUp(email: email, password: password)
     }
     
     func showAlert(title: String, message: String) {
