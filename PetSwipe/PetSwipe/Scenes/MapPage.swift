@@ -98,7 +98,6 @@ class MapPage: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
                         animated: true
                     )
 
-                    // 👇 Update label to include transport type and time
                     let transportLabel = self.labelForTransportType(request.transportType)
                     let distanceMiles = route.distance * 0.000621371
                     let timeMinutes = route.expectedTravelTime / 60.0
