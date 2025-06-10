@@ -323,7 +323,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LNT84LM5LK;
+				DEVELOPMENT_TEAM = QWYKBMRPX2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PetSwipe/Info.plist;
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "This app uses location to show distance to pet shelters";
@@ -337,7 +337,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = INFO499.PetSwipe;
+				PRODUCT_BUNDLE_IDENTIFIER = INFO499.wena04.PetSwipe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
